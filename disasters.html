@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Disasters | ResQHub</title>
+    <meta name="description" content="Disaster events and the organizations publishing needs for them.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/pages/disasters.js" defer></script>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="index.html" aria-label="ResQHub home">
+                <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="index.html">Home</a>
+                <a href="needs.html">Explore needs</a>
+                <a href="disasters.html" aria-current="page">Disasters</a>
+                <a class="hub-only" href="dashboard.html">My organization</a>
+                <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+            </nav>
+            <label class="role"><span>View as</span>
+                <select class="input select select--pill" id="role" aria-label="View as">
+                    <option value="citizen">Citizen</option>
+                    <option value="hub">HubManager</option>
+                </select>
+            </label>
+        </div>
+    </header>
+
+    <main class="wrap" id="main">
+        <div class="flash" id="flash" aria-live="polite"></div>
+
+        <section class="intro">
+            <p class="eyebrow">Disasters</p>
+            <h1 class="intro__title">Disaster events</h1>
+            <p class="intro__text">Explore incidents and see the needs published by participating organizations.</p>
+        </section>
+
+        <div class="cards" id="events"></div>
+    </main>
+
+    <footer class="footer">ResQHub · Demo</footer>
+</body>
+
+</html>

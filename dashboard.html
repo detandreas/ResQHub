@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My organization | ResQHub</title>
+    <meta name="description" content="Publish needs and confirm deliveries for your organization.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/pages/dashboard.js" defer></script>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="index.html" aria-label="ResQHub home">
+                <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="index.html">Home</a>
+                <a href="needs.html">Explore needs</a>
+                <a href="disasters.html">Disasters</a>
+                <a class="hub-only" href="dashboard.html" aria-current="page">My organization</a>
+                <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+            </nav>
+            <label class="role"><span>View as</span>
+                <select class="input select select--pill" id="role" aria-label="View as">
+                    <option value="citizen">Citizen</option>
+                    <option value="hub">HubManager</option>
+                </select>
+            </label>
+        </div>
+    </header>
+
+    <main class="wrap" id="main">
+        <div class="flash" id="flash" aria-live="polite"></div>
+
+        <section class="intro">
+            <p class="eyebrow">Organization dashboard</p>
+            <h1 class="intro__title" id="hub-name">My organization</h1>
+            <p class="intro__text">Publish needs and confirm deliveries.</p>
+            <div class="intro__actions">
+                <a class="btn btn--loud btn--lg" href="need-form.html">Publish a need <span aria-hidden="true">+</span></a>
+                <a class="btn btn--lg" href="offers.html">Review offers <span class="count" data-pending-count hidden></span></a>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <p class="stat__value" id="stat-needs">0</p>
+                <p class="stat__label">Published needs</p>
+            </div>
+            <div class="stat" id="stat-pending-tile">
+                <p class="stat__value" id="stat-pending">0</p>
+                <p class="stat__label">Pending offers</p>
+            </div>
+            <div class="stat">
+                <p class="stat__value" id="stat-received">0</p>
+                <p class="stat__label">Confirmed receipts</p>
+            </div>
+        </div>
+
+        <section class="section" aria-labelledby="hub-needs-title">
+            <div class="section__head">
+                <div>
+                    <h2 id="hub-needs-title">Your organization's needs</h2>
+                    <p>Only your organization can edit these requests.</p>
+                </div>
+            </div>
+            <div class="rows" id="hub-needs"></div>
+        </section>
+    </main>
+
+    <footer class="footer">ResQHub · Demo</footer>
+</body>
+
+</html>

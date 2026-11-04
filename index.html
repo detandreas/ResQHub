@@ -1,124 +1,87 @@
 <!doctype html>
-<html lang="el">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ενεργές Καταστροφές</title>
+    <title>ResQHub | Every need matters</title>
+    <meta name="description" content="Find relief needs published by local organizations and pledge what you can give.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/pages/home.js" defer></script>
 </head>
 
 <body>
+    <a class="skip" href="#main">Skip to content</a>
+
     <header class="topbar">
-        <div class="container topbar__inner">
-            <a class="brand" href="index.html">
-                <span class="brand__logo" aria-hidden="true"></span>
-                <span>ResQHub</span>
+        <div class="topbar__inner">
+            <a class="brand" href="index.html" aria-label="ResQHub home">
+                <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
             </a>
-            <nav class="topnav">
-                <a href="#map-section">Χάρτης</a>
-                <a href="#list-section">Λίστα καταστροφών</a>
+            <nav class="nav" aria-label="Main">
+                <a href="index.html" aria-current="page">Home</a>
+                <a href="needs.html">Explore needs</a>
+                <a href="disasters.html">Disasters</a>
+                <a class="hub-only" href="dashboard.html">My organization</a>
+                <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
             </nav>
-            <a class="btn btn--ghost" href="#" title="Δεν απαιτείται σύνδεση για την αναζήτηση">Σύνδεση</a>
+            <label class="role"><span>View as</span>
+                <select class="input select select--pill" id="role" aria-label="View as">
+                    <option value="citizen">Citizen</option>
+                    <option value="hub">HubManager</option>
+                </select>
+            </label>
         </div>
     </header>
 
-    <main class="container">
-        <section class="intro">
-            <h1>Ενεργές καταστροφές παγκοσμίως</h1>
-        </section>
+    <main class="wrap" id="main">
+        <div class="flash" id="flash" aria-live="polite"></div>
 
-        <!-- Β1: Αναζήτηση μέσω χάρτη -->
-        <section id="map-section" class="card">
-            <div class="card__head">
-                <h2>Παγκόσμιος χάρτης</h2>
-                <span class="muted">Επιλέξτε ένα σύμβολο για πληροφορίες</span>
-            </div>
-            <div id="map" role="region" aria-label="Χάρτης ενεργών συμβάντων"></div>
-            <div class="legend" aria-label="Υπόμνημα">
-                <div class="legend__group">
-                    <h3>Τύπος καταστροφής</h3>
-                    <ul id="legend-types"></ul>
-                </div>
-                <div class="legend__group">
-                    <h3>Κάλυψη αναγκών</h3>
-                    <ul>
-                        <li><span class="sw sw--critical"></span>&lt; 40% κρίσιμη</li>
-                        <li><span class="sw sw--medium"></span>40–69% μέτρια</li>
-                        <li><span class="sw sw--ok"></span>≥ 70% επαρκής</li>
-                    </ul>
+        <section class="hero" aria-labelledby="hero-title">
+            <span class="hero__media" aria-hidden="true"></span>
+            <div class="hero__content">
+                <p class="eyebrow">Disaster relief, Greece</p>
+                <h1 id="hero-title">Every need<br>matters<span class="dot" aria-hidden="true"></span></h1>
+                <p class="lede">Find a specific request from a local organization and pledge exactly what you can give.</p>
+                <div class="actions">
+                    <a class="btn btn--loud btn--lg" href="needs.html">Explore needs <span class="arrow" aria-hidden="true">→</span></a>
+                    <a class="btn btn--ghost btn--lg" href="disasters.html">View disasters <span class="arrow" aria-hidden="true">→</span></a>
+                    <a class="btn btn--ghost btn--lg hub-only" href="need-form.html">Publish a need <span aria-hidden="true">+</span></a>
                 </div>
             </div>
+            <dl class="hero__stats">
+                <div><dt>Open needs</dt><dd id="stat-needs">–</dd></div>
+                <div><dt>Disaster events</dt><dd id="stat-events">–</dd></div>
+                <div><dt>Organizations</dt><dd id="stat-hubs">–</dd></div>
+            </dl>
         </section>
 
-        <!-- Β2: Αναζήτηση μέσω λίστας -->
-        <section id="list-section" class="card">
-            <div class="card__head">
-                <h2>Λίστα καταστροφών</h2>
-                <span class="muted" id="result-count"></span>
+        <section class="section" aria-labelledby="needs-title">
+            <div class="section__head">
+                <h2 id="needs-title">Open needs <span class="pill-num" id="open-count">0</span></h2>
+                <a class="link-arrow" href="needs.html">View all <span aria-hidden="true">→</span></a>
             </div>
-
-            <form class="filters" id="filters" autocomplete="off">
-                <label class="field field--grow">
-                    <span class="field__label">Χώρα ή πόλη</span>
-                    <input type="search" id="f-query" placeholder="π.χ. Ελλάδα, Σμύρνη…">
-                </label>
-                <label class="field">
-                    <span class="field__label">Τύπος καταστροφής</span>
-                    <select id="f-type">
-                        <option value="">Όλοι οι τύποι</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span class="field__label">Ταξινόμηση κατά</span>
-                    <select id="f-sort">
-                        <option value="">—</option>
-                        <option value="magnitude">Μέγεθος</option>
-                        <option value="date">Ημερομηνία</option>
-                        <option value="coverage">Κάλυψη</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span class="field__label">Σειρά</span>
-                    <select id="f-order">
-                        <option value="desc">Φθίνουσα</option>
-                        <option value="asc">Αύξουσα</option>
-                    </select>
-                </label>
-                <button type="button" class="btn btn--ghost" id="btn-clear">Καθαρισμός φίλτρων</button>
-            </form>
-
-            <div class="list-head" aria-hidden="true">
-                <span>Τύπος</span>
-                <span>Τοποθεσία</span>
-                <span>Μέγεθος</span>
-                <span>Συμβεβλημένα Hubs</span>
-                <span>Ημερομηνία</span>
-                <span>Κάλυψη αναγκών</span>
-            </div>
-            <ul class="list" id="list"></ul>
-
-            <div class="empty" id="empty" hidden>
-                <p class="empty__msg" id="empty-msg"></p>
-                <button type="button" class="btn btn--primary" id="btn-clear-empty">Καθαρισμός φίλτρων</button>
-            </div>
+            <div class="cards" id="open-needs"></div>
         </section>
+
+        <nav class="shortcuts" aria-label="Shortcuts">
+            <a class="shortcut" href="disasters.html">Disasters <span aria-hidden="true">↗</span></a>
+            <a class="shortcut hub-only" href="dashboard.html">My organization <span aria-hidden="true">↗</span></a>
+            <a class="shortcut citizen-only" href="needs.html">Offer help <span aria-hidden="true">↗</span></a>
+        </nav>
     </main>
 
-    <footer class="footer">
-        <div class="container footer__inner">
-            <span>Mock UI · Use case «Search Disaster»</span>
-            <a id="demo-toggle" href="?empty=1">Προσομοίωση Ε1: χωρίς ενεργά συμβάντα</a>
-        </div>
-    </footer>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
+    <footer class="footer">ResQHub · Demo</footer>
 </body>
 
 </html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Publish a need | ResQHub</title>
+    <meta name="description" content="Publish or edit a relief need for a disaster event.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/pages/need-form.js" defer></script>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="index.html" aria-label="ResQHub home">
+                <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="index.html">Home</a>
+                <a href="needs.html">Explore needs</a>
+                <a href="disasters.html">Disasters</a>
+                <a class="hub-only" href="dashboard.html" aria-current="page">My organization</a>
+                <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+            </nav>
+            <label class="role"><span>View as</span>
+                <select class="input select select--pill" id="role" aria-label="View as">
+                    <option value="citizen">Citizen</option>
+                    <option value="hub">HubManager</option>
+                </select>
+            </label>
+        </div>
+    </header>
+
+    <main class="wrap" id="main">
+        <div class="flash" id="flash" aria-live="polite"></div>
+
+        <section class="intro">
+            <a class="back" href="dashboard.html"><span aria-hidden="true">←</span> Back to my organization</a>
+            <h1 class="intro__title" id="form-title">Publish a relief need</h1>
+            <p class="intro__text">Requests are linked to an existing disaster event.</p>
+        </section>
+
+        <section class="panel panel--form" id="need-panel" aria-labelledby="form-title">
+            <form class="form" id="need-form">
+                <div class="formgrid">
+                    <div class="field">
+                        <label class="field__label" for="eventId">Disaster event</label>
+                        <select class="input select" id="eventId" name="eventId" required></select>
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="category">Category</label>
+                        <select class="input select" id="category" name="category">
+                            <option value="Goods">Goods</option>
+                            <option value="Volunteers">Volunteers</option>
+                        </select>
+                    </div>
+                    <div class="field wide">
+                        <label class="field__label" for="title">Need title</label>
+                        <input class="input" id="title" name="title" required maxlength="80" placeholder="e.g. Blankets">
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="quantity">Required quantity</label>
+                        <input class="input" id="quantity" name="quantity" type="number" min="1" max="100000" step="1" required aria-describedby="quantity-hint">
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="unit">Unit</label>
+                        <input class="input" id="unit" name="unit" required maxlength="30" placeholder="items, cases, people">
+                    </div>
+                    <div class="field wide">
+                        <label class="field__label" for="notes">Notes</label>
+                        <textarea class="input" id="notes" name="notes" rows="3" maxlength="300" placeholder="Condition, sizes, drop-off details"></textarea>
+                    </div>
+                </div>
+                <p class="hint" id="quantity-hint">A requested quantity cannot be lower than aid already received or pledged.</p>
+                <div class="form-message" id="form-message" aria-live="polite"></div>
+                <div class="actions">
+                    <button class="btn btn--loud btn--lg" type="submit" id="submit-need">Publish need</button>
+                    <a class="btn btn--ghost btn--lg" href="dashboard.html">Cancel</a>
+                </div>
+            </form>
+        </section>
+
+        <section class="section" id="not-found" hidden>
+            <div class="empty">
+                <p class="empty__title">Not authorized.</p>
+                <p>This need does not exist or belongs to another organization.</p>
+                <a class="btn" href="dashboard.html">Back to my organization</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">ResQHub · Demo</footer>
+</body>
+
+</html>
