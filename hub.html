@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ανάγκες Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__logo" aria-hidden="true"></span>
+        <span>ResQHub</span>
+      </a>
+      <nav class="topnav">
+        <a href="index.html#map-section">Χάρτης</a>
+        <a href="index.html#list-section">Λίστα καταστροφών</a>
+      </nav>
+      <a class="btn btn--ghost" href="#">Σύνδεση</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <a class="back" id="back" href="index.html#list-section">← Επιστροφή στις καταστροφές</a>
+
+    <section class="card aid" id="hub-summary"></section>
+
+    <section class="card" id="needs-section" hidden>
+      <div class="card__head">
+        <h2>Ανάγκες του Hub</h2>
+        <span class="muted" id="needs-sub"></span>
+      </div>
+      <div class="list-head list-head--needs" aria-hidden="true">
+        <span>Ανάγκη</span>
+        <span>Ποσότητα</span>
+        <span>Εκκρεμεί</span>
+        <span>Σοβαρότητα</span>
+        <span>Κάλυψη</span>
+      </div>
+      <ul class="list" id="needs"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>Mock UI · Ανάγκες Hub</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const ev = DISASTERS.find((e) => e.id === Number(params.get("disaster")));
+      const hub = HUBS.find((h) => h.id === Number(params.get("hub")));
+      const root = document.getElementById("hub-summary");
+
+      // Το hub πρέπει να είναι συμβεβλημένο στο συγκεκριμένο συμβάν
+      if (!ev || !hub || !ev.hubs.includes(hub.name)) {
+        root.innerHTML = '<div class="empty"><p class="empty__msg">Το hub ή το συμβάν δεν βρέθηκε.</p></div>';
+        return;
+      }
+
+      const t = DISASTER_TYPES[ev.type];
+      const needs = needsOfHub(ev, hub);
+      const sum = hubNeedsSummary(needs);
+      const hl = coverageLevel(sum.coverage);
+      const distance = distanceKm(USER_LOCATION.lat, USER_LOCATION.lng, hub.lat, hub.lng);
+
+      document.title = `${hub.name} – ${t.label} ${ev.city}`;
+      const back = document.getElementById("back");
+      back.href = `disaster.html?id=${ev.id}`;
+      back.textContent = `← Επιστροφή στην καταστροφή: ${t.label}, ${ev.city}`;
+
+      root.innerHTML = `
+        <div class="aid__head">
+          <span class="type-dot type-dot--lg" style="--c:${t.color}"><img src="${t.icon}" alt=""></span>
+          <div>
+            <span class="muted">${t.label} · ${ev.city}, ${ev.country}</span>
+            <h1>${hub.name}</h1>
+          </div>
+        </div>
+        <dl class="aid__meta aid__meta--4">
+          <div><dt>Διεύθυνση</dt><dd>${hub.address}</dd></div>
+          <div><dt>Απόσταση από εσάς</dt><dd>${formatDistance(distance)}</dd></div>
+          <div><dt>Επικοινωνία</dt><dd>${hub.phone}<br><span class="muted">${hub.email}</span></dd></div>
+          <div><dt>Ωράριο</dt><dd>${hub.hours}</dd></div>
+        </dl>
+        <h2>Κάλυψη αναγκών του Hub</h2>
+        <div class="coverage coverage--${hl.key} coverage--lg">
+          <span class="coverage__bar"><span style="width:${sum.coverage}%"></span></span>
+          <span class="coverage__pct">${sum.coverage}%</span>
+          <span class="badge badge--${hl.key}">${hl.label}</span>
+        </div>`;
+
+      document.getElementById("needs-sub").textContent =
+        `${sum.total} ανάγκες · ${sum.urgent} επείγουσες · ταξινόμηση κατά σοβαρότητα`;
+
+      if (!needs.length) {
+        document.getElementById("needs-sub").textContent = "Καμία ανοιχτή ανάγκη";
+        document.querySelector(".list-head--needs").remove();
+        document.getElementById("needs").outerHTML =
+          '<div class="empty empty--info"><p class="empty__msg">Το hub δεν έχει τρέχουσες ανάγκες</p>' +
+          '<p class="empty__hint">Όλες οι ανάγκες που δήλωσε το hub για αυτή την καταστροφή έχουν καλυφθεί πλήρως.</p></div>';
+        document.getElementById("needs-section").hidden = false;
+        return;
+      }
+
+      document.getElementById("needs").innerHTML = needs.map((n) => {
+        const cl = coverageLevel(n.coverage);
+        return `
+          <li class="row row--needs">
+            <span class="row__place" data-label="Ανάγκη"><strong>${n.name}</strong><span class="muted">${n.category}</span></span>
+            <span data-label="Ποσότητα"><strong>${formatQty(n.quantity)}</strong> <span class="muted">${n.unit}</span></span>
+            <span data-label="Εκκρεμεί"><strong>${formatQty(n.remaining)}</strong></span>
+            <span data-label="Σοβαρότητα">
+              <span class="badge badge--${n.severity.key}" style="--cv:var(--${n.severity.key})">${n.severity.label}</span>
+            </span>
+            <span class="coverage coverage--${cl.key}" data-label="Κάλυψη">
+              <span class="coverage__bar"><span style="width:${n.coverage}%"></span></span>
+              <span class="coverage__pct">${n.coverage}%</span>
+            </span>
+          </li>`;
+      }).join("");
+      document.getElementById("needs-section").hidden = false;
+    })();
+  </script>
+</body>
+</html>

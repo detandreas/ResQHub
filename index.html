@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="el">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ενεργές Καταστροφές</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container topbar__inner">
+            <a class="brand" href="index.html">
+                <span class="brand__logo" aria-hidden="true"></span>
+                <span>ResQHub</span>
+            </a>
+            <nav class="topnav">
+                <a href="#map-section">Χάρτης</a>
+                <a href="#list-section">Λίστα καταστροφών</a>
+            </nav>
+            <a class="btn btn--ghost" href="#" title="Δεν απαιτείται σύνδεση για την αναζήτηση">Σύνδεση</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="intro">
+            <h1>Ενεργές καταστροφές παγκοσμίως</h1>
+        </section>
+
+        <!-- Β1: Αναζήτηση μέσω χάρτη -->
+        <section id="map-section" class="card">
+            <div class="card__head">
+                <h2>Παγκόσμιος χάρτης</h2>
+                <span class="muted">Επιλέξτε ένα σύμβολο για πληροφορίες</span>
+            </div>
+            <div id="map" role="region" aria-label="Χάρτης ενεργών συμβάντων"></div>
+            <div class="legend" aria-label="Υπόμνημα">
+                <div class="legend__group">
+                    <h3>Τύπος καταστροφής</h3>
+                    <ul id="legend-types"></ul>
+                </div>
+                <div class="legend__group">
+                    <h3>Κάλυψη αναγκών</h3>
+                    <ul>
+                        <li><span class="sw sw--critical"></span>&lt; 40% κρίσιμη</li>
+                        <li><span class="sw sw--medium"></span>40–69% μέτρια</li>
+                        <li><span class="sw sw--ok"></span>≥ 70% επαρκής</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Β2: Αναζήτηση μέσω λίστας -->
+        <section id="list-section" class="card">
+            <div class="card__head">
+                <h2>Λίστα καταστροφών</h2>
+                <span class="muted" id="result-count"></span>
+            </div>
+
+            <form class="filters" id="filters" autocomplete="off">
+                <label class="field field--grow">
+                    <span class="field__label">Χώρα ή πόλη</span>
+                    <input type="search" id="f-query" placeholder="π.χ. Ελλάδα, Σμύρνη…">
+                </label>
+                <label class="field">
+                    <span class="field__label">Τύπος καταστροφής</span>
+                    <select id="f-type">
+                        <option value="">Όλοι οι τύποι</option>
+                    </select>
+                </label>
+                <label class="field">
+                    <span class="field__label">Ταξινόμηση κατά</span>
+                    <select id="f-sort">
+                        <option value="">—</option>
+                        <option value="magnitude">Μέγεθος</option>
+                        <option value="date">Ημερομηνία</option>
+                        <option value="coverage">Κάλυψη</option>
+                    </select>
+                </label>
+                <label class="field">
+                    <span class="field__label">Σειρά</span>
+                    <select id="f-order">
+                        <option value="desc">Φθίνουσα</option>
+                        <option value="asc">Αύξουσα</option>
+                    </select>
+                </label>
+                <button type="button" class="btn btn--ghost" id="btn-clear">Καθαρισμός φίλτρων</button>
+            </form>
+
+            <div class="list-head" aria-hidden="true">
+                <span>Τύπος</span>
+                <span>Τοποθεσία</span>
+                <span>Μέγεθος</span>
+                <span>Συμβεβλημένα Hubs</span>
+                <span>Ημερομηνία</span>
+                <span>Κάλυψη αναγκών</span>
+            </div>
+            <ul class="list" id="list"></ul>
+
+            <div class="empty" id="empty" hidden>
+                <p class="empty__msg" id="empty-msg"></p>
+                <button type="button" class="btn btn--primary" id="btn-clear-empty">Καθαρισμός φίλτρων</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <span>Mock UI · Use case «Search Disaster»</span>
+            <a id="demo-toggle" href="?empty=1">Προσομοίωση Ε1: χωρίς ενεργά συμβάντα</a>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
