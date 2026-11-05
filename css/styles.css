@@ -822,6 +822,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .row__qty { font-size: 28px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
 .row__qty small { margin-left: 4px; color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
 .row__hint { margin-bottom: 10px; color: var(--muted); font-size: 12.5px; }
+.row__qty + .btn { margin-top: 10px; } /* no hint between them on the dashboard */
 
 .hub-group + .hub-group { margin-top: 36px; }
 

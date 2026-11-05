@@ -203,7 +203,8 @@ const UI = (function () {
   /**
    * List row for one need.
    * context: what the subtitle names, 'hub' | 'event' | 'none'.
-   * status: show the need's status badge next to its category.
+   * status: show the need's status badge next to its category (it replaces the
+   *   "still available to pledge" hint).
    */
   function needRow(n, { context = 'hub', status = false } = {}) {
     const where = context === 'event' ? Store.event(n.eventId)?.title
@@ -221,7 +222,7 @@ const UI = (function () {
         </div>
         <div class="row__side">
           <strong class="row__qty">${Store.remaining(n)}<small>${esc(n.unit)}</small></strong>
-          <span class="row__hint">still available to pledge</span>
+          ${status ? '' : '<span class="row__hint">still available to pledge</span>'}
           ${action}
         </div>
       </article>`;
