@@ -7,7 +7,13 @@
 
 const UI = (function () {
   const FLASH_KEY = 'resqhub_flash';
-  const ICONS = { flood: 'icons/flood.svg', fire: 'icons/fire.svg', quake: 'icons/earthquake.svg' };
+  const ICONS = {
+    flood: 'icons/flood.svg',
+    fire: 'icons/fire.svg',
+    quake: 'icons/earthquake.svg',
+    landslide: 'icons/landslide.svg',
+    industrial: 'icons/industrial.svg'
+  };
 
   const $ = (id) => document.getElementById(id);
 
@@ -105,11 +111,13 @@ const UI = (function () {
   }
 
   // ---------- Small renderers ----------
-  /** 'flood' | 'fire' | 'quake': picks the photo and icon for an event. */
+  /** 'flood' | 'fire' | 'quake' | 'landslide' | 'industrial': picks the photo and icon for an event. */
   function eventKind(e) {
     const type = String(e?.type || '').toLowerCase();
     if (type === 'wildfire') return 'fire';
     if (type === 'earthquake') return 'quake';
+    if (type === 'landslide') return 'landslide';
+    if (type.startsWith('industrial')) return 'industrial';
     return 'flood';
   }
 

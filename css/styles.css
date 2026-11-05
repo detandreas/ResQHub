@@ -510,8 +510,10 @@ body[data-role="hub"] .citizen-only { display: none; }
 }
 
 .photo--flood { background-image: var(--img-flood); }
-.photo--fire { background-image: var(--img-fire); }
-.photo--quake { background-image: var(--img-quake); }
+.photo--fire,
+.photo--industrial { background-image: var(--img-fire); }
+.photo--quake,
+.photo--landslide { background-image: var(--img-quake); }
 .photo--hero { background-image: var(--img-hero); }
 
 /* ---------- 10. Cards (needs and disaster events) ---------- */

@@ -8,17 +8,21 @@
 'use strict';
 
 const Store = (function () {
-  const KEY = 'resqhub_aid_needs_v1';
+  const KEY = 'resqhub_aid_needs_v2'; // bump when SEED changes so browsers load the new demo data
   const CURRENT_HUB_ID = 1; // the demo Organization Representative works for "Community Relief Network"
   const CATEGORIES = ['Goods', 'Volunteers'];
   const MAX_QUANTITY = 100000;
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const SEED = {
-    events: [
+    events: [ // oldest first
+      { id: 6, title: 'Crete Flash Floods', type: 'Flood', location: 'Chania, Crete', date: '2026-09-28', description: 'Flash floods damaged homes, shops and roads across western Crete.' },
+      { id: 7, title: 'Dodecanese Earthquake', type: 'Earthquake', location: 'Kos, Greece', date: '2026-10-08', description: 'Aftershocks keep families out of their homes while buildings are inspected.' },
+      { id: 5, title: 'Attica Warehouse Fire', type: 'Industrial accident', location: 'Aspropyrgos, Greece', date: '2026-10-15', description: 'Smoke from a chemical warehouse fire forced nearby residents to evacuate.' },
       { id: 1, title: 'Thessaly Flood Response', type: 'Flood', location: 'Larissa, Greece', date: '2026-10-20', description: 'Local relief organizations are supporting families affected by flooding.' },
       { id: 2, title: 'Evia Wildfire Relief', type: 'Wildfire', location: 'Evia, Greece', date: '2026-10-29', description: 'Essential supplies are needed for displaced residents.' },
-      { id: 3, title: 'Western Greece Earthquake', type: 'Earthquake', location: 'Patras, Greece', date: '2026-11-01', description: 'Community organizations are collecting essentials for affected households.' }
+      { id: 3, title: 'Western Greece Earthquake', type: 'Earthquake', location: 'Patras, Greece', date: '2026-11-01', description: 'Community organizations are collecting essentials for affected households.' },
+      { id: 4, title: 'Pelion Landslides', type: 'Landslide', location: 'Volos, Greece', date: '2026-11-03', description: 'Heavy rain set off landslides that cut road access to mountain villages.' }
     ],
     hubs: [
       { id: 1, name: 'Community Relief Network', email: 'help@community.example' },
@@ -30,11 +34,33 @@ const Store = (function () {
       { id: 3, eventId: 1, hubId: 2, title: 'Sorting volunteers', unit: 'people', quantity: 15, notes: 'Help sort supplies at the collection point', category: 'Volunteers' },
       { id: 4, eventId: 2, hubId: 1, title: 'Hygiene kits', unit: 'kits', quantity: 50, notes: 'Soap, toothbrushes and personal care items', category: 'Goods' },
       { id: 5, eventId: 2, hubId: 2, title: 'Food packages', unit: 'packages', quantity: 75, notes: 'Non-perishable food packages', category: 'Goods' },
-      { id: 6, eventId: 3, hubId: 2, title: 'Sleeping bags', unit: 'items', quantity: 40, notes: 'Clean, usable sleeping bags', category: 'Goods' }
+      { id: 6, eventId: 3, hubId: 2, title: 'Sleeping bags', unit: 'items', quantity: 40, notes: 'Clean, usable sleeping bags', category: 'Goods' },
+      // Community Relief Network (the demo organization): one of each status on "My organization".
+      { id: 7, eventId: 4, hubId: 1, title: 'Shovels and work gloves', unit: 'sets', quantity: 30, notes: 'For clearing mud and debris from village roads', category: 'Goods' }, // completed
+      { id: 8, eventId: 4, hubId: 1, title: 'Road-clearing volunteers', unit: 'people', quantity: 12, notes: 'Weekend shifts with the municipal crews', category: 'Volunteers' }, // fully pledged, partly received
+      { id: 9, eventId: 5, hubId: 1, title: 'FFP2 face masks', unit: 'boxes', quantity: 60, notes: 'Boxes of 20, for residents returning home', category: 'Goods' }, // fully pledged, nothing received yet
+      { id: 10, eventId: 6, hubId: 1, title: 'Dehumidifiers', unit: 'units', quantity: 10, notes: 'To dry out flooded ground-floor homes', category: 'Goods' }, // completed
+      { id: 11, eventId: 7, hubId: 1, title: 'First aid kits', unit: 'kits', quantity: 40, notes: 'Sealed, in-date kits for temporary shelters', category: 'Goods' }, // available
+      // Solidarity Support Hub
+      { id: 12, eventId: 5, hubId: 2, title: 'Shelter volunteers', unit: 'people', quantity: 20, notes: 'Evening shifts at the evacuation centre', category: 'Volunteers' },
+      { id: 13, eventId: 6, hubId: 2, title: 'Cleaning kits', unit: 'kits', quantity: 100, notes: 'Bleach, mops, buckets and gloves', category: 'Goods' },
+      { id: 14, eventId: 7, hubId: 2, title: 'Family tents', unit: 'items', quantity: 25, notes: 'Waterproof tents for four or more people', category: 'Goods' }
     ],
     offers: [
       { id: 1, needId: 1, name: 'Alex Morgan', email: 'alex@example.com', quantity: 20, status: 'received', date: '2026-11-02' },
-      { id: 2, needId: 2, name: 'Sam Taylor', email: 'sam@example.com', quantity: 10, status: 'pending', date: '2026-11-03' }
+      { id: 2, needId: 2, name: 'Sam Taylor', email: 'sam@example.com', quantity: 10, status: 'pending', date: '2026-11-03' },
+      { id: 3, needId: 7, name: 'Maria Papadopoulou', email: 'maria@example.com', quantity: 18, status: 'received', date: '2026-11-03' },
+      { id: 4, needId: 7, name: 'Nikos Georgiou', email: 'nikos@example.com', quantity: 12, status: 'received', date: '2026-11-04' },
+      { id: 5, needId: 8, name: 'Eleni Dimitriou', email: 'eleni@example.com', quantity: 8, status: 'received', date: '2026-11-04' },
+      { id: 6, needId: 8, name: 'Jordan Lee', email: 'jordan@example.com', quantity: 4, status: 'pending', date: '2026-11-05' },
+      { id: 7, needId: 9, name: 'Kostas Ioannou', email: 'kostas@example.com', quantity: 40, status: 'pending', date: '2026-11-01' },
+      { id: 8, needId: 9, name: 'Sofia Nikolaou', email: 'sofia@example.com', quantity: 20, status: 'pending', date: '2026-11-02' },
+      { id: 9, needId: 10, name: 'Alex Morgan', email: 'alex@example.com', quantity: 10, status: 'received', date: '2026-10-02' },
+      { id: 10, needId: 4, name: 'Dimitra Karra', email: 'dimitra@example.com', quantity: 15, status: 'declined', date: '2026-10-31' },
+      { id: 11, needId: 4, name: 'Sam Taylor', email: 'sam@example.com', quantity: 20, status: 'pending', date: '2026-11-01' },
+      { id: 12, needId: 11, name: 'Jordan Lee', email: 'jordan@example.com', quantity: 15, status: 'pending', date: '2026-11-05' },
+      { id: 13, needId: 12, name: 'Giorgos Vlachos', email: 'giorgos@example.com', quantity: 6, status: 'pending', date: '2026-10-17' },
+      { id: 14, needId: 13, name: 'Anna Petrou', email: 'anna@example.com', quantity: 35, status: 'received', date: '2026-10-05' }
     ],
     nextId: 100
   };
