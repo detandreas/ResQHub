@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/store.js" defer></script>
+    <script src="js/auth.js" defer></script>
     <script src="js/ui.js" defer></script>
     <script src="js/pages/offer.js" defer></script>
 </head>
@@ -29,18 +30,15 @@
                 <span class="brand__name">ResQ<span>Hub</span></span>
             </a>
             <nav class="nav" aria-label="Main">
-                <a href="index.html">Home</a>
-                <a href="needs.html" aria-current="page">Explore needs</a>
-                <a href="disasters.html">Disasters</a>
+                <a href="index.html" aria-current="page">Home</a>
                 <a class="hub-only" href="dashboard.html">My organization</a>
                 <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+                <a href="disasters.html">Disasters</a>
             </nav>
-            <label class="role"><span>View as</span>
-                <select class="input select select--pill" id="role" aria-label="View as">
-                    <option value="citizen">Citizen</option>
-                    <option value="hub">HubManager</option>
-                </select>
-            </label>
+            <div class="account">
+                <span class="account__who"><strong data-account-name></strong><small data-account-role></small></span>
+                <button class="btn btn--ghost btn--sm" type="button" data-logout>Log out</button>
+            </div>
         </div>
     </header>
 
@@ -48,7 +46,7 @@
         <div class="flash" id="flash" aria-live="polite"></div>
 
         <section class="intro">
-            <a class="back" href="needs.html"><span aria-hidden="true">←</span> Back to needs</a>
+            <a class="back" href="index.html#needs"><span aria-hidden="true">←</span> Back to needs</a>
             <h1 class="intro__title">Offer help</h1>
             <p class="intro__text">Submit a pledge to the responsible organization.</p>
         </section>
@@ -91,7 +89,7 @@
                     <div class="form-message" id="form-message" aria-live="polite"></div>
                     <div class="actions">
                         <button class="btn btn--loud btn--lg" type="submit" id="submit-offer">Submit offer <span class="arrow" aria-hidden="true">→</span></button>
-                        <a class="btn btn--ghost btn--lg" href="needs.html">Cancel</a>
+                        <a class="btn btn--ghost btn--lg" href="index.html#needs">Cancel</a>
                     </div>
                     <p class="hint">Demo only. Do not enter real personal information.</p>
                 </form>
@@ -102,7 +100,7 @@
             <div class="empty">
                 <p class="empty__title">Need not found.</p>
                 <p>This request does not exist or was removed.</p>
-                <a class="btn" href="needs.html">Back to needs</a>
+                <a class="btn" href="index.html#needs">Back to needs</a>
             </div>
         </section>
     </main>

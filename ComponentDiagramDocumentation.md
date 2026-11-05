@@ -46,3 +46,15 @@
 - Use Case: **View Disaster Needs**
 - Scope: Everyone
 - Καλεί το DisasterServlet το οποίο φέρνει τα συμβεβλημένα hubs και τις ανάγκες κάθε hub.
+
+# Use cases
+
+`Publish needs`: **Organization**
+`Handle incoming offers`: **Organization**
+`View Disasters`: **Citizen, Organization**
+`Offer help`: **Citizen**
+
+και αυτά σαν use cases
+
+## Διορθώσεις
+`Disaster` event should be free text?

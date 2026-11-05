@@ -1,7 +1,7 @@
 /* offer.html?need=N: need summary and the pledge form. */
 (function () {
   'use strict';
-  if (!UI.initPage()) return;
+  if (!UI.initPage({ only: 'citizen' })) return;
 
   const n = Store.need(UI.param('need'));
   const e = n && Store.event(n.eventId);
@@ -56,6 +56,6 @@
     }
 
     UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}.`);
-    window.location.href = 'needs.html';
+    window.location.href = 'index.html';
   });
 })();

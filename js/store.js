@@ -9,7 +9,7 @@
 
 const Store = (function () {
   const KEY = 'resqhub_aid_needs_v1';
-  const CURRENT_HUB_ID = 1; // the demo HubManager works for "Community Relief Network"
+  const CURRENT_HUB_ID = 1; // the demo Organization Representative works for "Community Relief Network"
   const CATEGORIES = ['Goods', 'Volunteers'];
   const MAX_QUANTITY = 100000;
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,7 +78,7 @@ const Store = (function () {
 
   /** Quantity the organization has confirmed as delivered. */
   const received = (n) => sumOf(n, 'received');
-  /** Quantity pledged by citizens but not yet confirmed. */
+  /** Quantity pledged by contributors but not yet confirmed. */
   const pending = (n) => sumOf(n, 'pending');
   /** Quantity still open for new pledges. */
   const remaining = (n) => Math.max(0, n.quantity - received(n) - pending(n));
@@ -111,7 +111,7 @@ const Store = (function () {
   const text = (value, max) => String(value ?? '').trim().slice(0, max);
   const today = () => new Date().toISOString().slice(0, 10);
 
-  /** A citizen pledges a quantity for a need. The offer starts as "pending". */
+  /** A contributor pledges a quantity for a need. The offer starts as "pending". */
   function addOffer(needId, input) {
     const n = need(needId);
     if (!n) return fail('This need no longer exists.');

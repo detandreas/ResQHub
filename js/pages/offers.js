@@ -1,7 +1,7 @@
-/* offers.html (HubManager): confirm or decline pledges for the hub's needs. */
+/* offers.html (Organization Representative): confirm or decline pledges for the hub's needs. */
 (function () {
   'use strict';
-  if (!UI.initPage({ hubOnly: true })) return;
+  if (!UI.initPage({ only: 'hub' })) return;
 
   const hub = Store.hub(Store.CURRENT_HUB_ID);
   const list = UI.$('offers');

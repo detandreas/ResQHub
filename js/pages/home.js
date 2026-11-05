@@ -1,7 +1,14 @@
-/* index.html: hero numbers and the six largest open needs. */
+/* index.html: hero numbers and every need, filtered live by search, category and disaster. */
 (function () {
   'use strict';
   if (!UI.initPage()) return;
+
+  const form = UI.$('filters');
+  const search = UI.$('search');
+  const category = UI.$('category');
+  const disaster = UI.$('disaster');
+  const results = UI.$('results');
+  const count = UI.$('result-count');
 
   const open = Store.openNeeds();
 
@@ -10,6 +17,34 @@
   UI.$('stat-hubs').textContent = Store.hubs().length;
   UI.$('open-count').textContent = open.length;
 
-  UI.$('open-needs').innerHTML = open.slice(0, 6).map((n) => UI.needCard(n)).join('') ||
-    UI.empty('No open needs right now.', 'Every published need is fully pledged. Check back soon.');
+  disaster.insertAdjacentHTML('beforeend', Store.events()
+    .map((e) => `<option value="${e.id}">${UI.esc(e.title)}</option>`)
+    .join(''));
+
+  // Open needs first (largest open quantity first), then the fully pledged ones.
+  const all = [...open, ...Store.needs().filter((n) => Store.remaining(n) === 0)];
+
+  function matches(n, query, cat, eventId) {
+    const e = Store.event(n.eventId);
+    const h = Store.hub(n.hubId);
+    const haystack = [n.title, e?.title, e?.location, h?.name].join(' ').toLowerCase();
+    return (cat === 'All' || n.category === cat) &&
+      (eventId === 'All' || n.eventId === Number(eventId)) &&
+      haystack.includes(query);
+  }
+
+  function render() {
+    const query = search.value.trim().toLowerCase();
+    const list = all.filter((n) => matches(n, query, category.value, disaster.value));
+
+    count.textContent = `Showing ${list.length} of ${UI.plural(all.length, 'need', 'needs')}`;
+    results.innerHTML = list.map((n) => UI.needCard(n)).join('') ||
+      UI.empty('No matching needs.', 'Try another word, category or disaster.');
+  }
+
+  form.addEventListener('submit', (event) => event.preventDefault());
+  search.addEventListener('input', render);
+  category.addEventListener('change', render);
+  disaster.addEventListener('change', render);
+  render();
 })();

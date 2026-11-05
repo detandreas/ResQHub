@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/store.js" defer></script>
+    <script src="js/auth.js" defer></script>
     <script src="js/ui.js" defer></script>
     <script src="js/pages/dashboard.js" defer></script>
 </head>
@@ -30,17 +31,14 @@
             </a>
             <nav class="nav" aria-label="Main">
                 <a href="index.html">Home</a>
-                <a href="needs.html">Explore needs</a>
-                <a href="disasters.html">Disasters</a>
                 <a class="hub-only" href="dashboard.html" aria-current="page">My organization</a>
                 <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+                <a href="disasters.html">Disasters</a>
             </nav>
-            <label class="role"><span>View as</span>
-                <select class="input select select--pill" id="role" aria-label="View as">
-                    <option value="citizen">Citizen</option>
-                    <option value="hub">HubManager</option>
-                </select>
-            </label>
+            <div class="account">
+                <span class="account__who"><strong data-account-name></strong><small data-account-role></small></span>
+                <button class="btn btn--ghost btn--sm" type="button" data-logout>Log out</button>
+            </div>
         </div>
     </header>
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/store.js" defer></script>
+    <script src="js/auth.js" defer></script>
     <script src="js/ui.js" defer></script>
     <script src="js/pages/home.js" defer></script>
 </head>
@@ -30,17 +31,14 @@
             </a>
             <nav class="nav" aria-label="Main">
                 <a href="index.html" aria-current="page">Home</a>
-                <a href="needs.html">Explore needs</a>
-                <a href="disasters.html">Disasters</a>
                 <a class="hub-only" href="dashboard.html">My organization</a>
                 <a class="hub-only" href="offers.html">Incoming offers <span class="count" data-pending-count hidden></span></a>
+                <a href="disasters.html">Disasters</a>
             </nav>
-            <label class="role"><span>View as</span>
-                <select class="input select select--pill" id="role" aria-label="View as">
-                    <option value="citizen">Citizen</option>
-                    <option value="hub">HubManager</option>
-                </select>
-            </label>
+            <div class="account">
+                <span class="account__who"><strong data-account-name></strong><small data-account-role></small></span>
+                <button class="btn btn--ghost btn--sm" type="button" data-logout>Log out</button>
+            </div>
         </div>
     </header>
 
@@ -51,12 +49,13 @@
             <span class="hero__media" aria-hidden="true"></span>
             <div class="hero__content">
                 <p class="eyebrow">Disaster relief, Greece</p>
-                <h1 id="hero-title">Every need<br>matters<span class="dot" aria-hidden="true"></span></h1>
-                <p class="lede">Find a specific request from a local organization and pledge exactly what you can give.</p>
+                <h1 id="hero-title">Every need<br>matters</h1>
+                <p class="lede citizen-only">Find a specific request from a local organization and pledge exactly what you can give.</p>
+                <p class="lede hub-only">Publish what your organization needs and follow every pledge until it arrives.</p>
                 <div class="actions">
-                    <a class="btn btn--loud btn--lg" href="needs.html">Explore needs <span class="arrow" aria-hidden="true">→</span></a>
+                    <a class="btn btn--loud btn--lg citizen-only" href="#needs">Explore needs <span class="arrow" aria-hidden="true">→</span></a>
+                    <a class="btn btn--loud btn--lg hub-only" href="need-form.html">Publish a need <span aria-hidden="true">+</span></a>
                     <a class="btn btn--ghost btn--lg" href="disasters.html">View disasters <span class="arrow" aria-hidden="true">→</span></a>
-                    <a class="btn btn--ghost btn--lg hub-only" href="need-form.html">Publish a need <span aria-hidden="true">+</span></a>
                 </div>
             </div>
             <dl class="hero__stats">
@@ -66,18 +65,44 @@
             </dl>
         </section>
 
-        <section class="section" aria-labelledby="needs-title">
+        <section class="section" id="needs" aria-labelledby="needs-title">
             <div class="section__head">
-                <h2 id="needs-title">Open needs <span class="pill-num" id="open-count">0</span></h2>
-                <a class="link-arrow" href="needs.html">View all <span aria-hidden="true">→</span></a>
+                <div>
+                    <h2 id="needs-title">Relief needs <span class="pill-num" id="open-count" title="Open needs">0</span></h2>
+                    <p class="citizen-only">Find a specific request and offer the quantity you can provide.</p>
+                    <p class="hub-only">Every published request. You can edit the ones your organization owns.</p>
+                </div>
             </div>
-            <div class="cards" id="open-needs"></div>
+
+            <form class="toolbar" id="filters" role="search" aria-label="Filter needs">
+                <div class="field field--grow">
+                    <label class="field__label" for="search">Search</label>
+                    <input class="input" id="search" type="search" placeholder="Needs, locations, organizations" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label class="field__label" for="category">Category</label>
+                    <select class="input select" id="category">
+                        <option value="All">All categories</option>
+                        <option value="Goods">Goods</option>
+                        <option value="Volunteers">Volunteers</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="disaster">Disaster</label>
+                    <select class="input select" id="disaster">
+                        <option value="All">All disasters</option>
+                    </select>
+                </div>
+            </form>
+
+            <p class="results-count" id="result-count" aria-live="polite"></p>
+            <div class="cards" id="results"></div>
         </section>
 
         <nav class="shortcuts" aria-label="Shortcuts">
             <a class="shortcut" href="disasters.html">Disasters <span aria-hidden="true">↗</span></a>
             <a class="shortcut hub-only" href="dashboard.html">My organization <span aria-hidden="true">↗</span></a>
-            <a class="shortcut citizen-only" href="needs.html">Offer help <span aria-hidden="true">↗</span></a>
+            <a class="shortcut hub-only" href="offers.html">Incoming offers <span aria-hidden="true">↗</span></a>
         </nav>
     </main>
 

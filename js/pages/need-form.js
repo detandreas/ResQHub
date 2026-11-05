@@ -1,7 +1,7 @@
-/* need-form.html (HubManager): publish a new need, or edit one with ?id=N. */
+/* need-form.html (Organization Representative): publish a new need, or edit one with ?id=N. */
 (function () {
   'use strict';
-  if (!UI.initPage({ hubOnly: true })) return;
+  if (!UI.initPage({ only: 'hub' })) return;
 
   const idParam = UI.param('id');
   const existing = idParam === null ? null : Store.need(idParam);

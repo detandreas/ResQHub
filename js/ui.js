@@ -1,12 +1,11 @@
-/* ResQHub shared page helpers: header and role, messages, HTML renderers.
+/* ResQHub shared page helpers: header and session, messages, HTML renderers.
  *
- * Every page loads js/store.js, then this file, then its own js/pages/<page>.js,
- * which starts with `if (!UI.initPage()) return;`.
+ * Every page loads js/store.js, js/auth.js, then this file, then its own
+ * js/pages/<page>.js, which starts with `if (!UI.initPage()) return;`.
  */
 'use strict';
 
 const UI = (function () {
-  const ROLE_KEY = 'resqhub_role';
   const FLASH_KEY = 'resqhub_flash';
   const ICONS = { flood: 'icons/flood.svg', fire: 'icons/fire.svg', quake: 'icons/earthquake.svg' };
 
@@ -19,47 +18,45 @@ const UI = (function () {
   /** Read a query-string parameter, e.g. param('id') on disaster.html?id=2. */
   const param = (name) => new URLSearchParams(window.location.search).get(name);
 
-  // ---------- Role ----------
-  function getRole() {
-    try {
-      return localStorage.getItem(ROLE_KEY) === 'hub' ? 'hub' : 'citizen';
-    } catch (e) {
-      return 'citizen';
-    }
-  }
-
-  function setRole(role) {
-    try {
-      localStorage.setItem(ROLE_KEY, role === 'hub' ? 'hub' : 'citizen');
-    } catch (e) {
-      /* storage blocked: the role resets on the next page */
-    }
-  }
+  // ---------- Session ----------
+  /** 'citizen' (Contributor) | 'hub' (Organization Representative) for the signed-in user. */
+  const role = () => Auth.current()?.role;
 
   /**
-   * Set up the shared header on every page.
-   * Pass { hubOnly: true } on HubManager pages: citizens are sent home.
+   * Set up the shared header on every page except login.html.
+   * Signed-out visitors go to login.html.
+   * Pass { only: 'hub' } or { only: 'citizen' } on pages for one role; the other role goes home.
    * Returns false when the page is redirecting away.
    */
-  function initPage({ hubOnly = false } = {}) {
-    const role = getRole();
-    if (hubOnly && role !== 'hub') {
+  function initPage({ only } = {}) {
+    const user = Auth.current();
+    if (!user) {
+      window.location.replace('login.html');
+      return false;
+    }
+    if (only && user.role !== only) {
       window.location.replace('index.html');
       return false;
     }
 
-    document.body.dataset.role = role;
+    document.body.dataset.role = user.role;
 
-    const select = $('role');
-    if (select) {
-      select.value = role;
-      select.addEventListener('change', () => {
-        setRole(select.value);
-        window.location.href = select.value === 'hub' ? 'dashboard.html' : 'index.html';
+    const hub = user.role === 'hub' ? Store.hub(Store.CURRENT_HUB_ID) : null;
+    document.querySelectorAll('[data-account-name]').forEach((el) => {
+      el.textContent = hub ? hub.name : user.username;
+    });
+    document.querySelectorAll('[data-account-role]').forEach((el) => {
+      el.textContent = Auth.roleLabel(user.role);
+    });
+    document.querySelectorAll('[data-logout]').forEach((button) => {
+      button.addEventListener('click', () => {
+        Auth.logout();
+        flash('You have been logged out.');
+        window.location.href = 'login.html';
       });
-    }
+    });
 
-    refreshPendingBadge();
+    if (hub) refreshPendingBadge();
     showStoredFlash();
     return true;
   }
@@ -133,14 +130,25 @@ const UI = (function () {
     return `<div class="empty"><p class="empty__title">${esc(title)}</p>${text ? `<p>${esc(text)}</p>` : ''}${actionHtml}</div>`;
   }
 
-  function offerButton(n) {
+  /**
+   * The action for one need, by role.
+   * Contributor: "Offer help" (or "Fully pledged"). Organization Representative: "Edit need" on
+   * their own organization's needs, nothing on other organizations' needs.
+   * editClass: button style for "Edit need" ('btn--light' on photo cards).
+   */
+  function needAction(n, editClass = '') {
+    if (role() === 'hub') {
+      return n.hubId === Store.CURRENT_HUB_ID
+        ? `<a class="${['btn', 'btn--sm', editClass].filter(Boolean).join(' ')}" href="need-form.html?id=${n.id}">Edit need</a>`
+        : '';
+    }
     return Store.remaining(n) > 0
       ? `<a class="btn btn--loud btn--sm" href="offer.html?need=${n.id}">Offer help <span class="arrow" aria-hidden="true">→</span></a>`
       : '<span class="btn btn--sm is-disabled" aria-disabled="true">Fully pledged</span>';
   }
 
   // ---------- Cards and rows ----------
-  /** Photo card for one need (home, explore needs). */
+  /** Photo card for one need (home). */
   function needCard(n) {
     const e = Store.event(n.eventId);
     const h = Store.hub(n.hubId);
@@ -157,7 +165,7 @@ const UI = (function () {
           <div class="qty"><strong>${Store.remaining(n)}<small>${esc(n.unit)} available</small></strong><span>${pct}% received</span></div>
           ${bar(pct)}
           <p class="card__meta">${Store.received(n)} delivered · ${Store.pending(n)} pledged</p>
-          <div class="card__foot"><span class="card__place">${esc(e.location)}</span>${offerButton(n)}</div>
+          <div class="card__foot"><span class="card__place">${esc(e.location)}</span>${needAction(n, 'btn--light')}</div>
         </div>
       </article>`;
   }
@@ -188,16 +196,13 @@ const UI = (function () {
 
   /**
    * List row for one need.
-   * manager: show "Edit need" instead of "Offer help".
    * context: what the subtitle names, 'hub' | 'event' | 'none'.
    */
-  function needRow(n, { manager = false, context = 'hub' } = {}) {
+  function needRow(n, { context = 'hub' } = {}) {
     const where = context === 'event' ? Store.event(n.eventId)?.title
       : context === 'hub' ? Store.hub(n.hubId)?.name : '';
     const sub = [where, n.notes].filter(Boolean).map(esc).join(' · ');
-    const action = manager
-      ? `<a class="btn btn--sm" href="need-form.html?id=${n.id}">Edit need</a>`
-      : offerButton(n);
+    const action = needAction(n);
     return `
       <article class="row">
         <div class="row__main">
@@ -224,6 +229,7 @@ const UI = (function () {
     notice,
     clearNotice,
     flash,
+    showStoredFlash,
     eventKind,
     chip,
     formatDate,

@@ -115,7 +115,10 @@ body[data-role="hub"] .citizen-only { display: none; }
   align-items: stretch;
 }
 
-.section { margin-top: 64px; }
+.section {
+  margin-top: 64px;
+  scroll-margin-top: 120px; /* #needs lands below the sticky header */
+}
 
 .section__head {
   display: flex;
@@ -194,14 +197,22 @@ body[data-role="hub"] .citizen-only { display: none; }
 .nav a:hover { color: var(--ink); background: var(--soft-tint); }
 .nav a[aria-current="page"] { color: var(--ink); background: var(--soft); }
 
-.role {
+/* Signed-in user and "Log out" (filled by js/ui.js) */
+.account {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 13px;
+  gap: 12px;
   white-space: nowrap;
 }
+
+.account__who {
+  display: grid;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.account__who strong { font-size: 13.5px; font-weight: 700; }
+.account__who small { color: var(--muted); font-size: 12px; }
 
 /* ---------- 5. Buttons ---------- */
 .btn {
@@ -271,17 +282,6 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .btn .arrow { font-size: 17px; line-height: 0; transition: transform .15s; }
 .btn:hover .arrow { transform: translateX(3px); }
-
-.link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 2px solid var(--ink);
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-}
 
 .back {
   display: inline-flex;
@@ -422,15 +422,6 @@ body[data-role="hub"] .citizen-only { display: none; }
   letter-spacing: -.045em;
 }
 
-.dot {
-  display: inline-block;
-  width: .19em;
-  height: .19em;
-  margin-left: .05em;
-  border-radius: 50%;
-  background: var(--loud);
-}
-
 .lede {
   max-width: 520px;
   color: var(--ink-on-soft);
@@ -528,6 +519,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .photo--flood { background-image: var(--img-flood); }
 .photo--fire { background-image: var(--img-fire); }
 .photo--quake { background-image: var(--img-quake); }
+.photo--hero { background-image: var(--img-hero); }
 
 /* ---------- 10. Cards (needs and disaster events) ---------- */
 .cards {
@@ -607,6 +599,7 @@ body[data-role="hub"] .citizen-only { display: none; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-height: 53px; /* same height with or without a button (an Organization Representative sees none on other hubs' needs) */
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid var(--on-photo-line);
@@ -911,15 +904,6 @@ textarea.input {
   background-repeat: no-repeat;
 }
 
-.select--pill {
-  width: auto;
-  min-height: 38px;
-  padding-left: 14px;
-  border-radius: var(--pill);
-  font-size: 13px;
-  font-weight: 600;
-}
-
 .hint { color: var(--muted); font-size: 12.5px; }
 
 .form .actions { margin-top: 4px; }
@@ -1024,7 +1008,7 @@ textarea.input {
 
 .shortcuts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
@@ -1048,7 +1032,51 @@ textarea.input {
 .shortcut span { font-size: 28px; transition: transform .2s; }
 .shortcut:hover span { transform: translate(3px, -3px); }
 
-/* ---------- 20. Footer ---------- */
+/* ---------- 20. Login ---------- */
+.login {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 20px;
+  min-height: max(580px, calc(100svh - 250px));
+  margin-top: 24px;
+}
+
+.login__media {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px 44px 44px;
+  border-radius: var(--radius-lg);
+}
+
+.login__media .eyebrow { color: var(--on-photo-muted); }
+
+.login__title {
+  font-size: clamp(48px, 6.4vw, 96px);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.045em;
+}
+
+.login__text {
+  max-width: 440px;
+  margin-top: 22px;
+  color: var(--on-photo-muted);
+  font-size: 16px;
+}
+
+.login__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+}
+
+.login__submit { width: 100%; justify-content: space-between; }
+
+/* ---------- 21. Footer ---------- */
 .footer {
   padding: 22px 24px;
   border-top: 1px solid var(--line);
@@ -1057,11 +1085,11 @@ textarea.input {
   text-align: center;
 }
 
-/* ---------- 21. Responsive ---------- */
+/* ---------- 22. Responsive ---------- */
 @media (max-width: 1120px) {
   .topbar__inner { flex-wrap: wrap; gap: 10px 12px; padding: 12px 20px; }
   .nav { order: 3; flex: 1 1 100%; margin: 0 -6px; }
-  .role { margin-left: auto; }
+  .account { margin-left: auto; }
 }
 
 @media (max-width: 920px) {
@@ -1072,11 +1100,14 @@ textarea.input {
   .panel--photo { min-height: 420px; }
   .banner { padding: 28px 32px 32px; }
   .facts--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .login { grid-template-columns: 1fr; min-height: 0; }
+  .login__media { min-height: 340px; }
+  .login__panel { padding: 36px; }
 }
 
 @media (max-width: 600px) {
   .topbar__inner { padding: 12px 16px; }
-  .role span { display: none; }
+  .account__who { display: none; }
   .wrap { padding: 0 16px 64px; }
 
   .hero { min-height: 0; margin-top: 16px; padding: 40px 22px 24px; border-radius: 22px; gap: 40px; }
@@ -1114,6 +1145,12 @@ textarea.input {
 
   .offer__actions { justify-content: flex-start; }
   .shortcut { padding: 24px; font-size: 21px; }
+
+  .login { margin-top: 16px; gap: 14px; }
+  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; gap: 28px; }
+  .login__title { font-size: 46px; }
+  .login__text { margin-top: 14px; font-size: 15px; }
+  .login__panel { padding: 24px 20px; border-radius: 22px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
