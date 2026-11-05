@@ -409,25 +409,8 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .hero__content { max-width: 800px; }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 28px;
-  height: 2px;
-  background: currentColor;
-}
-
 .hero h1 {
-  margin: 22px 0 26px;
+  margin: 0 0 26px;
   font-size: clamp(56px, 9vw, 128px);
   font-weight: 800;
   line-height: .94;
@@ -462,9 +445,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 /* ---------- 8. Page intro ---------- */
 .intro { padding: 44px 0 28px; }
 
-.intro .eyebrow { color: var(--muted); }
-.intro .back + .intro__title,
-.intro .eyebrow + .intro__title { margin-top: 16px; }
+.intro .back + .intro__title { margin-top: 16px; }
 
 .intro__title {
   font-size: clamp(34px, 4.6vw, 56px);
@@ -1143,13 +1124,11 @@ textarea.input {
 .login__media {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 40px;
   padding: 40px 44px 44px;
   border-radius: var(--radius-lg);
 }
-
-.login__media .eyebrow { color: var(--on-photo-muted); }
 
 .login__title {
   font-size: clamp(48px, 6.4vw, 96px);
