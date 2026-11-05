@@ -162,10 +162,11 @@ const Store = (function () {
       return fail(`Quantity cannot be lower than existing received and pending offers (${committed}).`);
     }
 
-    if (existing) Object.assign(existing, data);
-    else db.needs.push({ id: db.nextId++, ...data });
+    let saved = existing;
+    if (saved) Object.assign(saved, data);
+    else db.needs.push(saved = { id: db.nextId++, ...data });
     save();
-    return { ok: true, created: !existing };
+    return { ok: true, created: !existing, need: saved };
   }
 
   /** The hub confirms ("received") or declines a pending offer for one of its needs. */

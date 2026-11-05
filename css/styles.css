@@ -715,6 +715,59 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .panel--form { max-width: 860px; }
 
+/* Success box on top of the need form (need-form.html): the form stays visible, blurred, behind it */
+.panel--form { position: relative; }
+
+.form-done {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 56px 24px;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+.form-done__box {
+  width: min(100%, 540px);
+  padding: 32px 32px 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+  text-align: center;
+}
+
+.form-done__box:focus { outline: none; }
+
+.form-done__box::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--base);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.form-done__title { font-size: 24px; font-weight: 800; letter-spacing: -.035em; }
+.form-done__text { margin-top: 8px; color: var(--muted); font-size: 15px; }
+
+.form-done__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
 .facts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1144,6 +1197,9 @@ textarea.input {
   .toolbar .field--grow { flex: 1 1 100%; }
 
   .offer__actions { justify-content: flex-start; }
+  .form-done { padding: 24px 16px; }
+  .form-done__box { padding: 24px 20px 22px; }
+  .form-done__actions .btn { flex: 1 1 100%; }
   .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }

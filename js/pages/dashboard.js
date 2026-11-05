@@ -4,7 +4,7 @@
   if (!UI.initPage({ only: 'hub' })) return;
 
   const hub = Store.hub(Store.CURRENT_HUB_ID);
-  const needs = Store.needsOfHub(hub.id);
+  const needs = Store.needsOfHub(hub.id).sort((a, b) => b.id - a.id); // newest first
   const offers = Store.offersOfHub(hub.id);
   const pending = offers.filter((o) => o.status === 'pending').length;
 
