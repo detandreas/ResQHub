@@ -36,13 +36,14 @@
     return `
       <div class="offer">
         <div class="offer__info">
+          <div class="tags">
+            ${n.category ? `<span class="tag">${UI.esc(n.category)}</span>` : ''}
+            <span class="status status--${UI.esc(o.status)}">${UI.esc(STATUS_LABELS[o.status] || o.status)}</span>
+          </div>
           <p class="offer__title">${UI.esc(n.title)} · ${o.quantity} ${UI.esc(n.unit)}</p>
           <p class="offer__meta">${UI.esc(o.name)} · ${UI.esc(o.email)} · ${UI.esc(UI.formatDate(o.date))}</p>
         </div>
-        <div class="offer__actions">
-          <span class="status status--${UI.esc(o.status)}">${UI.esc(o.status)}</span>
-          ${actions}
-        </div>
+        ${actions && `<div class="offer__actions">${actions}</div>`}
       </div>`;
   }
 

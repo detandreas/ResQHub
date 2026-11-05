@@ -194,11 +194,18 @@ const UI = (function () {
       </article>`;
   }
 
+  const NEED_STATUS_LABELS = { available: 'Available', pledged: 'Fully pledged', completed: 'Completed' };
+  const needStatusBadge = (n) => {
+    const s = Store.needStatus(n);
+    return `<span class="status status--${s}">${NEED_STATUS_LABELS[s]}</span>`;
+  };
+
   /**
    * List row for one need.
    * context: what the subtitle names, 'hub' | 'event' | 'none'.
+   * status: show the need's status badge next to its category.
    */
-  function needRow(n, { context = 'hub' } = {}) {
+  function needRow(n, { context = 'hub', status = false } = {}) {
     const where = context === 'event' ? Store.event(n.eventId)?.title
       : context === 'hub' ? Store.hub(n.hubId)?.name : '';
     const sub = [where, n.notes].filter(Boolean).map(esc).join(' · ');
@@ -206,7 +213,7 @@ const UI = (function () {
     return `
       <article class="row">
         <div class="row__main">
-          <span class="tag">${esc(n.category)}</span>
+          <div class="tags"><span class="tag">${esc(n.category)}</span>${status ? needStatusBadge(n) : ''}</div>
           <h3 class="row__title">${esc(n.title)}</h3>
           ${sub ? `<p class="row__sub">${sub}</p>` : ''}
           ${bar(Store.percent(n))}

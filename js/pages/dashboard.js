@@ -14,7 +14,7 @@
   UI.$('stat-received').textContent = offers.filter((o) => o.status === 'received').length;
   UI.$('stat-pending-tile').classList.toggle('stat--alert', pending > 0);
 
-  UI.$('hub-needs').innerHTML = needs.map((n) => UI.needRow(n, { context: 'event' })).join('') ||
+  UI.$('hub-needs').innerHTML = needs.map((n) => UI.needRow(n, { context: 'event', status: true })).join('') ||
     UI.empty('No requests yet.', 'Publish your first need so contributors can pledge.',
       '<a class="btn btn--loud" href="need-form.html">Publish a need</a>');
 })();

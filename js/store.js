@@ -84,6 +84,9 @@ const Store = (function () {
   const remaining = (n) => Math.max(0, n.quantity - received(n) - pending(n));
   /** Share of the requested quantity already delivered (0-100). */
   const percent = (n) => Math.min(100, Math.round((100 * received(n)) / n.quantity));
+  /** 'completed' once everything is received, 'pledged' when nothing is left to pledge, else 'available'. */
+  const needStatus = (n) => received(n) >= n.quantity ? 'completed'
+    : remaining(n) === 0 ? 'pledged' : 'available';
 
   const needsOfEvent = (eventId) => db.needs.filter((n) => n.eventId === Number(eventId));
   const needsOfHub = (hubId) => db.needs.filter((n) => n.hubId === Number(hubId));
@@ -195,6 +198,7 @@ const Store = (function () {
     pending,
     remaining,
     percent,
+    needStatus,
     needsOfEvent,
     needsOfHub,
     hubsOfEvent,
