@@ -51,7 +51,7 @@
 
 `Publish needs`: **Organization**
 `Handle incoming offers`: **Organization**
-`View Disasters`: **Citizen, Organization**
+`View Disasters`: **Ci  tizen, Organization**
 `Offer help`: **Citizen**
 
 και αυτά σαν use cases

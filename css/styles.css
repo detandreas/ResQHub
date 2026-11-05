@@ -361,6 +361,8 @@ body[data-role="hub"] .citizen-only { display: none; }
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap; /* "1 pending" stays on one line next to a long title */
+  flex: none;
 }
 
 /* ---------- 7. Hero (home) ---------- */
@@ -1043,6 +1045,42 @@ textarea.input {
 .status--received::before { content: "✓"; font-size: 11px; }
 .status--declined { color: var(--muted); border-style: dashed; }
 
+/* Confirm / decline dialog (offers.html). Native <dialog>: top layer, Esc closes */
+.dialog {
+  width: min(100% - 32px, 460px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift), 0 0 0 1px var(--line);
+}
+
+.dialog::backdrop {
+  background: color-mix(in srgb, var(--ink) 45%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.dialog__body { padding: 28px; }
+.dialog__title { font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+
+.dialog__offer {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--soft-tint);
+}
+
+.dialog__text { margin-top: 14px; color: var(--muted); font-size: 14.5px; }
+
+.dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
 /* ---------- 19. Empty states and shortcuts ---------- */
 .empty {
   grid-column: 1 / -1;
@@ -1197,6 +1235,8 @@ textarea.input {
   .toolbar .field--grow { flex: 1 1 100%; }
 
   .offer__actions { justify-content: flex-start; }
+  .dialog__body { padding: 22px 20px; }
+  .dialog__actions { flex-direction: column-reverse; }
   .form-done { padding: 24px 16px; }
   .form-done__box { padding: 24px 20px 22px; }
   .form-done__actions .btn { flex: 1 1 100%; }

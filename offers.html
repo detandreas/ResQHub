@@ -51,13 +51,52 @@
             <p class="intro__text">Confirm delivery only when the aid has actually been received.</p>
         </section>
 
+        <form class="toolbar" id="filters" role="search" aria-label="Filter offers">
+            <div class="field field--grow">
+                <label class="field__label" for="search">Search</label>
+                <input class="input" id="search" type="search" placeholder="Contributor name, email or need" autocomplete="off">
+            </div>
+            <div class="field">
+                <label class="field__label" for="status">Status</label>
+                <select class="input select" id="status">
+                    <option value="All">All statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="received">Received</option>
+                    <option value="declined">Declined</option>
+                </select>
+            </div>
+            <div class="field">
+                <label class="field__label" for="need">Need</label>
+                <select class="input select" id="need">
+                    <option value="All">All needs</option>
+                </select>
+            </div>
+        </form>
+
+        <p class="results-count" id="result-count" aria-live="polite"></p>
+
         <section class="panel" aria-labelledby="offers-title">
             <div class="panel__head">
-                <h2 class="panel__title" id="offers-title">Offers</h2>
+                <h2 class="panel__title" id="offers-title" tabindex="-1">Offers</h2>
                 <span class="count" id="pending-label" hidden></span>
             </div>
             <div class="offers" id="offers"></div>
         </section>
+
+        <dialog class="dialog" id="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-text">
+            <form class="dialog__body" method="dialog">
+                <h2 class="dialog__title" id="dialog-title">Confirm receipt?</h2>
+                <div class="dialog__offer">
+                    <p class="offer__title" id="dialog-offer-title"></p>
+                    <p class="offer__meta" id="dialog-offer-meta"></p>
+                </div>
+                <p class="dialog__text" id="dialog-text"></p>
+                <div class="dialog__actions">
+                    <button class="btn btn--ghost" type="submit" value="cancel" autofocus>Cancel</button>
+                    <button class="btn btn--loud" type="button" id="dialog-ok">Yes, confirm receipt</button>
+                </div>
+            </form>
+        </dialog>
     </main>
 
     <footer class="footer">ResQHub · Demo</footer>
