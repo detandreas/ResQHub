@@ -3,11 +3,7 @@
 (function () {
   'use strict';
 
-  const user = Auth.current();
-  if (user) {
-    window.location.replace(Auth.landing(user.role));
-    return;
-  }
+  // Registration remains reachable from Sign in even when a demo session is active.
 
   const form = UI.$('register-form');
   const role = UI.$('role');
@@ -28,6 +24,12 @@
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    if (value('password') !== value('confirmPassword')) {
+      UI.notice('Passwords do not match.', 'error', 'form-message');
+      UI.$('confirmPassword').focus();
+      return;
+    }
 
     const result = Auth.register({
       role: role.value,

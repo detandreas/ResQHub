@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Create an account | ResQHub</title>
-    <meta name="description" content="Sign in to ResQHub as a contributor or as an organization representative.">
+    <meta name="description" content="Create a ResQHub Contributor or Organization account.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,6 +54,7 @@
                       <div class="field"><label class="field__label" for="email">Email</label><input class="input" id="email" type="email" autocomplete="email" required></div>
                       <div class="field"><label class="field__label" for="phone">Phone</label><input class="input" id="phone" type="tel" autocomplete="tel" required></div>
                       <div class="field wide"><label class="field__label" for="password">Password (at least 6 characters)</label><input class="input" id="password" type="password" minlength="6" autocomplete="new-password" required></div>
+                      <div class="field wide"><label class="field__label" for="confirmPassword">Confirm password</label><input class="input" id="confirmPassword" type="password" minlength="6" autocomplete="new-password" required></div>
                     </div>
                     <div id="organization-fields" hidden>
                       <div class="field"><label class="field__label" for="organizationName">Organization name</label><input class="input" id="organizationName" maxlength="100"></div>

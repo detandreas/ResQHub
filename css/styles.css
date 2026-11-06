@@ -39,9 +39,12 @@
 
   /* Photos (blended into the sage hue, see .photo) */
   --img-hero: url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2000&q=80");
-  --img-flood: url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=75");
-  --img-fire: url("https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=900&q=75");
-  --img-quake: url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=75");
+  /* Locally stored illustrative images, one for each disaster category. */
+  --img-flood: url("https://images.unsplash.com/photo-1760500959972-27f751e094b1?auto=format&fit=crop&w=1600&q=85");
+  --img-fire: url("https://images.unsplash.com/photo-1759699631373-b8103eddef4b?auto=format&fit=crop&w=1600&q=85");
+  --img-quake: url("https://images.unsplash.com/photo-1677233860259-ce1a8e0f8498?auto=format&fit=crop&w=1600&q=85");
+  --img-landslide: url("https://images.unsplash.com/photo-1687555821474-c0b2ed52a558?auto=format&fit=crop&w=1600&q=85");
+  --img-industrial: url("https://images.unsplash.com/photo-1708300251110-0f0affccb436?auto=format&fit=crop&w=1600&q=85");
 }
 
 /* ---------- 2. Base ---------- */
@@ -98,6 +101,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* Role-based visibility (body[data-role] is set by js/ui.js) */
 body:not([data-role="hub"]) .hub-only { display: none; }
 body[data-role="hub"] .citizen-only { display: none; }
+body[data-role="guest"] .account__who { display: grid; }
 
 /* ---------- 3. Layout ---------- */
 .wrap {
@@ -511,10 +515,10 @@ body[data-role="hub"] .citizen-only { display: none; }
 }
 
 .photo--flood { background-image: var(--img-flood); }
-.photo--fire,
-.photo--industrial { background-image: var(--img-fire); }
-.photo--quake,
-.photo--landslide { background-image: var(--img-quake); }
+.photo--fire { background-image: var(--img-fire); }
+.photo--quake { background-image: var(--img-quake); }
+.photo--landslide { background-image: var(--img-landslide); }
+.photo--industrial { background-image: var(--img-industrial); }
 .photo--hero { background-image: var(--img-hero); }
 
 /* ---------- 10. Cards (needs and disaster events) ---------- */
@@ -933,6 +937,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .toolbar .field { flex: 0 1 220px; }
 .toolbar .field--grow { flex: 1 1 320px; }
+.toolbar #reset-filters { min-height: 46px; }
 
 .field__label { font-size: 13px; font-weight: 600; }
 .field__hint { color: var(--muted); font-size: 12.5px; }
@@ -1375,7 +1380,11 @@ textarea.input {
   border-radius: var(--radius-lg);
 }
 
-.login__submit { width: 100%; justify-content: space-between; }
+/* Match the primary and guest buttons: centered labels and equal widths. */
+.login .actions { width: 100%; }
+.login__submit { width: 100%; justify-content: center; position: relative; }
+.login__submit .arrow { position: absolute; right: 22px; }
+.guest-entry { width: 100%; }
 .panel__title--lg + .form { margin-top: 24px; }
 .guest-entry { margin-top: 12px; }
 .guest-entry .btn { width: 100%; }

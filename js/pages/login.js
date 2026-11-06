@@ -2,11 +2,13 @@
 (function () {
   'use strict';
 
-  const user = Auth.current();
-  if (user) {
-    window.location.replace(Auth.landing(user.role));
-    return;
-  }
+  // Keep the sign-in page accessible even when a demo account is already signed in.
+  // Otherwise the visitor cannot choose the explicit "Continue as Guest" option.
+  const guestEntry = UI.$('guest-entry');
+  guestEntry.addEventListener('click', () => {
+    // Guest mode is read-only. Clear a previous session before navigating.
+    Auth.logout();
+  });
 
   const form = UI.$('login-form');
   const username = UI.$('username');
@@ -26,7 +28,7 @@
 
     if (!username.value.trim() || !password.value) {
       markInvalid(true);
-      UI.notice('Enter your username and password.', 'error', 'form-message');
+      UI.notice('Enter your email address and password.', 'error', 'form-message');
       (username.value.trim() ? password : username).focus();
       return;
     }
