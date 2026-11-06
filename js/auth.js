@@ -122,10 +122,27 @@ const Auth = (function () {
     }
   }
 
+  /**
+   * The saved contact details of a registered Contributor, if available.
+   * Built-in demo users have no registered profile and must enter their details.
+   * Read from the account on each call, rather than trusting stale session data.
+   */
+  function contactDetails() {
+    const user = current();
+    if (!user || user.role !== 'citizen') return null;
+    const registered = readRegistered().find((a) => a.username === user.username && a.role === 'citizen');
+    if (!registered) return null;
+    return {
+      name: registered.name || '',
+      email: registered.email || registered.username,
+      phone: registered.phone || ''
+    };
+  }
+
   /** The first page each role sees after signing in. */
   const landing = (role) => (role === 'hub' ? 'dashboard.html' : 'index.html');
 
   const roleLabel = (role) => ROLE_LABELS[role] || '';
 
-  return { login, register, current, logout, landing, roleLabel };
+  return { login, register, current, contactDetails, logout, landing, roleLabel };
 })();
