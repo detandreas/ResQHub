@@ -760,6 +760,20 @@ body[data-role="guest"] .account__who { display: grid; }
 .form-done__title { font-size: 24px; font-weight: 800; letter-spacing: -.035em; }
 .form-done__text { margin-top: 8px; color: var(--muted); font-size: 15px; }
 
+/* Dedicated confirmation page after a successful Contributor offer. */
+.offer-success {
+  display: grid;
+  place-items: center;
+  min-height: min(70vh, 620px);
+  padding: 56px 16px 80px;
+}
+.offer-success .form-done__box {
+  width: min(100%, 620px);
+  padding: clamp(26px, 5vw, 48px);
+}
+.offer-success .form-done__title { font-size: clamp(26px, 3vw, 36px); }
+.offer-success .form-done__text { line-height: 1.7; }
+
 .form-done__actions {
   display: flex;
   flex-wrap: wrap;
