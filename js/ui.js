@@ -140,8 +140,9 @@ const UI = (function () {
 
   /**
    * The action for one need, by role.
-   * Contributor: "Offer help" (or "Fully pledged"). Organization Representative: "Edit need" on
-   * their own organization's needs, nothing on other organizations' needs.
+   * Contributor: "Offer help" while something is still available (the status badge already says
+   * "Fully pledged" or "Completed"). Organization Representative: "Edit need" on their own
+   * organization's needs, nothing on other organizations' needs.
    * editClass: button style for "Edit need" ('btn--light' on photo cards).
    */
   function needAction(n, editClass = '') {
@@ -152,8 +153,18 @@ const UI = (function () {
     }
     return Store.remaining(n) > 0
       ? `<a class="btn btn--loud btn--sm" href="offer.html?need=${n.id}">Offer help <span class="arrow" aria-hidden="true">→</span></a>`
-      : '<span class="btn btn--sm is-disabled" aria-disabled="true">Fully pledged</span>';
+      : '';
   }
+
+  const NEED_STATUS_LABELS = { available: 'Available', pledged: 'Fully pledged', completed: 'Completed' };
+  const needStatusBadge = (n) => {
+    const s = Store.needStatus(n);
+    return `<span class="status status--${s}">${NEED_STATUS_LABELS[s]}</span>`;
+  };
+
+  /** "30 received · 12 pending · 100 kits requested": the same line on cards and rows. */
+  const needMeta = (n) =>
+    `${Store.received(n)} received · ${Store.pending(n)} pending · ${n.quantity} ${esc(n.unit)} requested`;
 
   // ---------- Cards and rows ----------
   /** Photo card for one need (home). */
@@ -167,13 +178,13 @@ const UI = (function () {
         ${photo(e)}
         <div class="card__top">${chip(e)}</div>
         <div class="card__body">
-          <span class="tag">${esc(n.category)}</span>
+          <div class="tags"><span class="tag">${esc(n.category)}</span>${needStatusBadge(n)}</div>
           <h3 class="card__title">${esc(n.title)}</h3>
           <p class="card__sub">${esc(h.name)}<br>${esc(e.title)}</p>
-          <div class="qty"><strong>${Store.remaining(n)}<small>${esc(n.unit)} available</small></strong><span>${pct}% received</span></div>
+          <div class="qty"><strong>${Store.remaining(n)}<small>${esc(n.unit)}</small></strong></div>
           ${bar(pct)}
-          <p class="card__meta">${Store.received(n)} delivered · ${Store.pending(n)} pledged</p>
-          <div class="card__foot"><span class="card__place">${esc(e.location)}</span>${needAction(n, 'btn--light')}</div>
+          <p class="card__meta">${needMeta(n)}</p>
+          <div class="card__foot">${needAction(n, 'btn--light')}</div>
         </div>
       </article>`;
   }
@@ -202,19 +213,11 @@ const UI = (function () {
       </article>`;
   }
 
-  const NEED_STATUS_LABELS = { available: 'Available', pledged: 'Fully pledged', completed: 'Completed' };
-  const needStatusBadge = (n) => {
-    const s = Store.needStatus(n);
-    return `<span class="status status--${s}">${NEED_STATUS_LABELS[s]}</span>`;
-  };
-
   /**
-   * List row for one need.
+   * List row for one need, with its status badge next to the category.
    * context: what the subtitle names, 'hub' | 'event' | 'none'.
-   * status: show the need's status badge next to its category (it replaces the
-   *   "still available to pledge" hint).
    */
-  function needRow(n, { context = 'hub', status = false } = {}) {
+  function needRow(n, { context = 'hub' } = {}) {
     const where = context === 'event' ? Store.event(n.eventId)?.title
       : context === 'hub' ? Store.hub(n.hubId)?.name : '';
     const sub = [where, n.notes].filter(Boolean).map(esc).join(' · ');
@@ -222,15 +225,14 @@ const UI = (function () {
     return `
       <article class="row">
         <div class="row__main">
-          <div class="tags"><span class="tag">${esc(n.category)}</span>${status ? needStatusBadge(n) : ''}</div>
+          <div class="tags"><span class="tag">${esc(n.category)}</span>${needStatusBadge(n)}</div>
           <h3 class="row__title">${esc(n.title)}</h3>
           ${sub ? `<p class="row__sub">${sub}</p>` : ''}
           ${bar(Store.percent(n))}
-          <p class="row__meta">${Store.received(n)} received · ${Store.pending(n)} pending · ${n.quantity} ${esc(n.unit)} requested</p>
+          <p class="row__meta">${needMeta(n)}</p>
         </div>
         <div class="row__side">
           <strong class="row__qty">${Store.remaining(n)}<small>${esc(n.unit)}</small></strong>
-          ${status ? '' : '<span class="row__hint">still available to pledge</span>'}
           ${action}
         </div>
       </article>`;
