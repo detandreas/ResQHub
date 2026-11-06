@@ -15,6 +15,8 @@
   const form = UI.$('offer-form');
   const qty = UI.$('qty');
   const submit = UI.$('submit-offer');
+  const slot = UI.$('delivery-slot');
+  const slots = Store.upcomingSlots(n);
 
   function renderSummary() {
     const left = Store.remaining(n);
@@ -27,7 +29,7 @@
       : 'This need is fully pledged. Thank you!';
 
     const closed = left === 0;
-    form.querySelectorAll('input').forEach((input) => { input.disabled = closed; });
+    form.querySelectorAll('input, select').forEach((input) => { input.disabled = closed; });
     submit.disabled = closed;
   }
 
@@ -39,6 +41,12 @@
   UI.$('need-context').textContent = `${e.title} · ${h.name}`;
   UI.$('need-notes').textContent = n.notes;
   UI.$('qty-unit').textContent = n.unit;
+  UI.$('delivery-address').textContent = Store.deliveryAddress(n);
+
+  // Needs without upcoming delivery times simply have no time to choose.
+  slot.closest('.field').hidden = slots.length === 0;
+  slot.required = slots.length > 0;
+  slot.innerHTML = slots.map((s) => `<option value="${UI.esc(s)}">${UI.esc(UI.formatSlot(s))}</option>`).join('');
   renderSummary();
 
   form.addEventListener('submit', (event) => {
@@ -46,6 +54,8 @@
     const result = Store.addOffer(n.id, {
       name: UI.$('name').value,
       email: UI.$('email').value,
+      phone: UI.$('phone').value,
+      slot: slot.value,
       quantity: qty.value
     });
 

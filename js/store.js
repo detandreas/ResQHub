@@ -2,17 +2,18 @@
  *
  * Demo data is kept in localStorage so it survives page changes and reloads.
  * Pages read and change data only through the Store object. Every change
- * (addOffer, saveNeed, setOfferStatus) validates its input and returns
+ * (addHub, addOffer, saveNeed, setOfferStatus) validates its input and returns
  * { ok: true, ... } or { ok: false, error: "message for the user" }.
  */
 'use strict';
 
 const Store = (function () {
-  const KEY = 'resqhub_aid_needs_v2'; // bump when SEED changes so browsers load the new demo data
-  const CURRENT_HUB_ID = 1; // the demo Organization Representative works for "Community Relief Network"
+  const KEY = 'resqhub_aid_needs_v3'; // bump when SEED changes so browsers load the new demo data
+  const DEMO_HUB_ID = 1; // the demo Organization Representative works for "Community Relief Network"
   const CATEGORIES = ['Goods', 'Volunteers'];
   const MAX_QUANTITY = 100000;
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const SLOT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/; // a delivery time: 2026-11-09T14:00 (local time)
 
   const SEED = {
     events: [ // oldest first
@@ -25,8 +26,8 @@ const Store = (function () {
       { id: 4, title: 'Pelion Landslides', type: 'Landslide', location: 'Volos, Greece', date: '2026-11-03', description: 'Heavy rain set off landslides that cut road access to mountain villages.' }
     ],
     hubs: [
-      { id: 1, name: 'Community Relief Network', email: 'help@community.example' },
-      { id: 2, name: 'Solidarity Support Hub', email: 'contact@solidarity.example' }
+      { id: 1, name: 'Community Relief Network', email: 'help@community.example', address: 'Panepistimiou 10, Athens' },
+      { id: 2, name: 'Solidarity Support Hub', email: 'contact@solidarity.example', address: 'Egnatia 42, Thessaloniki' }
     ],
     needs: [
       { id: 1, eventId: 1, hubId: 1, title: 'Bottled water', unit: 'cases', quantity: 120, notes: 'Sealed cases of drinking water', category: 'Goods' },
@@ -97,6 +98,14 @@ const Store = (function () {
   const hub = (id) => byId(db.hubs, id);
   const need = (id) => byId(db.needs, id);
 
+  /** The Organization Representative who is signed in works for this hub (the demo hub if unknown). */
+  const currentHubId = () => Auth.current()?.hubId ?? DEMO_HUB_ID;
+
+  /** Where contributors bring what they pledged: the need's own point, else its organization's address. */
+  const deliveryAddress = (n) => n.deliveryAddress || hub(n.hubId)?.address || '';
+  /** Delivery times that are still in the future, earliest first. */
+  const upcomingSlots = (n) => (n.slots || []).filter((s) => new Date(s) > new Date()).sort();
+
   const offersFor = (n) => db.offers.filter((o) => o.needId === n.id);
   const sumOf = (n, status) => offersFor(n)
     .filter((o) => o.status === status)
@@ -140,6 +149,24 @@ const Store = (function () {
   const text = (value, max) => String(value ?? '').trim().slice(0, max);
   const today = () => new Date().toISOString().slice(0, 10);
 
+  /** A registered organization gets its own hub, so it starts with an empty list of needs. */
+  function addHub(input) {
+    const name = text(input.name, 100);
+    const email = text(input.email, 120);
+    const address = text(input.address, 200);
+
+    if (!name) return fail('Please enter the organization name.');
+    if (!address) return fail('Please enter the organization address.');
+    if (db.hubs.some((h) => h.name.toLowerCase() === name.toLowerCase())) {
+      return fail('An organization with this name is already registered.');
+    }
+
+    const created = { id: db.nextId++, name, email, address };
+    db.hubs.push(created);
+    save();
+    return { ok: true, hub: created };
+  }
+
   /** A contributor pledges a quantity for a need. The offer starts as "pending". */
   function addOffer(needId, input) {
     const n = need(needId);
@@ -147,17 +174,23 @@ const Store = (function () {
 
     const name = text(input.name, 80);
     const email = text(input.email, 120);
+    const phone = text(input.phone, 25);
+    const slot = text(input.slot, 16);
     const quantity = Number(input.quantity);
     const left = remaining(n);
+    const slots = upcomingSlots(n);
 
     if (!name) return fail('Please enter your full name.');
     if (!EMAIL.test(email)) return fail('Please enter a valid email address.');
+    if (phone.replace(/\D/g, '').length < 7) return fail('Please enter a valid phone number.');
     if (left === 0) return fail('This need is already fully pledged.');
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > left) {
       return fail(`Please enter a whole number between 1 and ${left}.`);
     }
+    if (slots.length > 0 && !slots.includes(slot)) return fail('Please choose a delivery time.');
 
-    const offer = { id: db.nextId++, needId: n.id, name, email, quantity, status: 'pending', date: today() };
+    const offer = { id: db.nextId++, needId: n.id, name, email, phone, quantity, status: 'pending', date: today() };
+    if (slots.length > 0) offer.slot = slot;
     db.offers.push(offer);
     save();
     return { ok: true, offer };
@@ -167,21 +200,23 @@ const Store = (function () {
   function saveNeed(needId, input) {
     const existing = needId == null ? null : need(needId);
     if (needId != null && !existing) return fail('This need no longer exists.');
-    if (existing && existing.hubId !== CURRENT_HUB_ID) return fail("You can only edit your own organization's needs.");
+    if (existing && existing.hubId !== currentHubId()) return fail("You can only edit your own organization's needs.");
 
     const data = {
       eventId: Number(input.eventId),
-      hubId: CURRENT_HUB_ID,
+      hubId: currentHubId(),
       category: String(input.category),
       title: text(input.title, 80),
       quantity: Number(input.quantity),
       unit: text(input.unit, 30),
+      deliveryAddress: text(input.deliveryAddress, 250),
+      slots: [...new Set(input.slots || [])].filter((s) => SLOT.test(s)).sort(),
       notes: text(input.notes, 300)
     };
 
     if (!event(data.eventId)) return fail('Choose a disaster event.');
     if (!CATEGORIES.includes(data.category)) return fail('Choose a category.');
-    if (!data.title || !data.unit) return fail('Complete all required fields.');
+    if (!data.title || !data.unit || !data.deliveryAddress) return fail('Complete all required fields.');
     if (!Number.isInteger(data.quantity) || data.quantity < 1 || data.quantity > MAX_QUANTITY) {
       return fail(`Required quantity must be a whole number between 1 and ${MAX_QUANTITY}.`);
     }
@@ -202,7 +237,7 @@ const Store = (function () {
   function setOfferStatus(offerId, status) {
     const offer = byId(db.offers, offerId);
     if (!offer || offer.status !== 'pending') return fail('This offer has already been handled.');
-    if (need(offer.needId)?.hubId !== CURRENT_HUB_ID) return fail('This offer belongs to another organization.');
+    if (need(offer.needId)?.hubId !== currentHubId()) return fail('This offer belongs to another organization.');
     if (status !== 'received' && status !== 'declined') return fail('Unknown offer status.');
 
     offer.status = status;
@@ -211,7 +246,7 @@ const Store = (function () {
   }
 
   return {
-    CURRENT_HUB_ID,
+    currentHubId,
     CATEGORIES,
     MAX_QUANTITY,
     events: () => db.events,
@@ -220,6 +255,8 @@ const Store = (function () {
     event,
     hub,
     need,
+    deliveryAddress,
+    upcomingSlots,
     received,
     pending,
     remaining,
@@ -231,6 +268,7 @@ const Store = (function () {
     openNeeds,
     offersOfHub,
     pendingOffersOfHub,
+    addHub,
     addOffer,
     saveNeed,
     setOfferStatus

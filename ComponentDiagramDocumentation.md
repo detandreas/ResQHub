@@ -49,10 +49,10 @@
 
 # Use cases
 
-`Publish needs`: **Organization**
-`Handle incoming offers`: **Organization**
-`View Disasters`: **Ci  tizen, Organization**
-`Offer help`: **Citizen**
+~~`Publish needs`: **Organization**`~~
+~~`Handle incoming offers`: **Organization**~~
+`View Disasters`: **Contributor, Organization**
+`Offer help`: **Contributor**
 
 και αυτά σαν use cases
 

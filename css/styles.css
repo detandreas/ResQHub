@@ -260,6 +260,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .btn--light:hover { --b-bg: var(--surface); }
 
 .btn--lg { min-height: 54px; padding: 0 26px; font-size: 15px; }
+.btn--block { width: 100%; }
 .btn--sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
 
 .btn:disabled,
@@ -823,8 +824,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .row__qty { font-size: 28px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
 .row__qty small { margin-left: 4px; color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
-.row__hint { margin-bottom: 10px; color: var(--muted); font-size: 12.5px; }
-.row__qty + .btn { margin-top: 10px; } /* no hint between them on the dashboard */
+.row__qty + .btn { margin-top: 10px; }
 
 .hub-group + .hub-group { margin-top: 36px; }
 
@@ -953,9 +953,163 @@ textarea.input {
   background-repeat: no-repeat;
 }
 
-.hint { color: var(--muted); font-size: 12.5px; }
-
 .form .actions { margin-top: 4px; }
+
+/* Need form: tighter fields */
+.panel--form .formgrid { gap: 14px 16px; }
+.panel--form textarea.input { min-height: 76px; }
+
+/* Delivery-time picker (js/pages/slot-picker.js): the calendar, and the times of the chosen day beside it */
+.slot-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 65fr) minmax(0, 35fr); /* the calendar and the times, 65 / 35 */
+  gap: 28px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cal__head strong { font-size: 14px; letter-spacing: -.01em; }
+
+.cal__nav {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .15s;
+}
+
+.cal__nav:hover:not(:disabled) { background: var(--soft-tint); }
+.cal__nav:disabled { opacity: .35; cursor: not-allowed; }
+
+.cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.cal__dow {
+  padding-bottom: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cal__day {
+  position: relative;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: 600 13px/1 var(--font);
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+
+.cal__day:hover:not(:disabled) { background: var(--soft-tint); }
+.cal__day:disabled { opacity: .35; cursor: not-allowed; }
+.cal__day.is-today { box-shadow: inset 0 0 0 1px var(--line-strong); }
+.cal__day[aria-pressed="true"] { background: var(--ink); color: var(--base); }
+
+/* A dot under a day that already has chosen times */
+.cal__day.has-times::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--loud);
+}
+
+.times { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.times__title { display: grid; gap: 1px; }
+.times__title strong { font-size: 14px; letter-spacing: -.01em; }
+.times__title span { color: var(--muted); font-size: 12px; }
+
+.times__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* three times in every row */
+  align-content: start;
+  gap: 6px;
+}
+
+.time {
+  min-height: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  background: transparent;
+  color: var(--ink);
+  font: 600 12.5px/1 var(--font);
+  cursor: pointer;
+  transition: background-color .15s, box-shadow .15s;
+}
+
+.time:hover:not(:disabled) { background: var(--soft-tint); }
+.time:disabled { opacity: .35; cursor: not-allowed; }
+.time[aria-pressed="true"] { border-color: var(--ink); background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); }
+
+.slot-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot-list:empty { display: none; }
+
+.slot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 5px 5px 14px;
+  border-radius: var(--pill);
+  background: var(--soft-tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.slot-chip button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+
+.slot-chip button:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); color: var(--ink); }
+.slot-chip button:disabled { cursor: not-allowed; opacity: .5; }
 .panel__sub + .form { margin-top: 24px; }
 .form-message:empty { display: none; }
 
@@ -1036,6 +1190,16 @@ textarea.input {
 .status--completed { background: var(--ink); color: var(--base); }
 .status--pledged { background: transparent; box-shadow: inset 0 0 0 1px var(--line-strong); }
 .status--declined { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+
+/* Need statuses on a dark photo card: dark text on the light fill, light text on the others */
+.on-photo .status--available { color: var(--ink); }
+.on-photo .status--pledged {
+  background: var(--glass);
+  color: var(--on-photo);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--base) 45%, transparent);
+  backdrop-filter: blur(8px);
+}
+.on-photo .status--completed { color: var(--on-photo); box-shadow: inset 0 0 0 1px var(--on-photo-line); }
 
 /* Confirm / decline dialog (offers.html). Native <dialog>: top layer, Esc closes */
 .dialog {
@@ -1127,10 +1291,11 @@ textarea.input {
 .login__media {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 40px;
-  padding: 40px 44px 44px;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 44px;
   border-radius: var(--radius-lg);
+  text-align: center;
 }
 
 .login__title {
@@ -1138,13 +1303,6 @@ textarea.input {
   font-weight: 800;
   line-height: .94;
   letter-spacing: -.045em;
-}
-
-.login__text {
-  max-width: 440px;
-  margin-top: 22px;
-  color: var(--on-photo-muted);
-  font-size: 16px;
 }
 
 .login__panel {
@@ -1156,6 +1314,11 @@ textarea.input {
 }
 
 .login__submit { width: 100%; justify-content: space-between; }
+.panel__title--lg + .form { margin-top: 24px; }
+.guest-entry { margin-top: 12px; }
+.guest-entry .btn { width: 100%; }
+.account-prompt { margin-top: 24px; color: var(--muted); font-size: 14px; text-align: center; }
+.account-prompt a { color: var(--ink); font-weight: 600; }
 
 /* ---------- 21. Footer ---------- */
 .footer {
@@ -1230,6 +1393,10 @@ textarea.input {
   .cards,
   .formgrid,
   .shortcuts { grid-template-columns: 1fr; }
+  .slot-picker { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
+  .cal__day { height: 36px; }
+  .times__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .time { min-height: 36px; }
   .card { min-height: 460px; }
 
   .banner { min-height: 0; padding: 22px 20px 24px; border-radius: 22px; }
@@ -1258,9 +1425,8 @@ textarea.input {
   .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
-  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; gap: 28px; }
+  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; }
   .login__title { font-size: 46px; }
-  .login__text { margin-top: 14px; font-size: 15px; }
   .login__panel { padding: 24px 20px; border-radius: 22px; }
 }
 

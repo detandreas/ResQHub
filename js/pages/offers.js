@@ -4,7 +4,7 @@
   'use strict';
   if (!UI.initPage({ only: 'hub' })) return;
 
-  const hub = Store.hub(Store.CURRENT_HUB_ID);
+  const hub = Store.hub(Store.currentHubId());
   const list = UI.$('offers');
   const form = UI.$('filters');
   const search = UI.$('search');
@@ -41,7 +41,7 @@
             <span class="status status--${UI.esc(o.status)}">${UI.esc(STATUS_LABELS[o.status] || o.status)}</span>
           </div>
           <p class="offer__title">${UI.esc(n.title)} · ${o.quantity} ${UI.esc(n.unit)}</p>
-          <p class="offer__meta">${UI.esc(o.name)} · ${UI.esc(o.email)} · ${UI.esc(UI.formatDate(o.date))}</p>
+          <p class="offer__meta">${[o.name, o.email, o.phone, o.slot && `Delivery ${UI.formatSlot(o.slot)}`, UI.formatDate(o.date)].filter(Boolean).map(UI.esc).join(' · ')}</p>
         </div>
         ${actions && `<div class="offer__actions">${actions}</div>`}
       </div>`;

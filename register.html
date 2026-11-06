@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create an account | ResQHub</title>
+    <meta name="description" content="Sign in to ResQHub as a contributor or as an organization representative.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/pages/register.js" defer></script>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="login.html" aria-label="ResQHub sign in">
+                <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
+            </a>
+        </div>
+    </header>
+
+    <main class="wrap" id="main">
+        <div class="flash" id="flash" aria-live="polite"></div>
+
+        <div class="login">
+            <section class="login__media on-photo" aria-label="About ResQHub">
+                <span class="photo photo--hero" aria-hidden="true"></span>
+                <div>
+                    <p class="login__title">Every need<br>matters</p>
+                </div>
+            </section>
+
+            <section class="panel login__panel" aria-labelledby="register-title">
+                <h1 class="panel__title panel__title--lg" id="register-title">Create an account</h1>
+                <form class="form" id="register-form">
+                    <div class="field"><label class="field__label" for="role">Account type</label><select class="input select" id="role" required><option value="citizen">Contributor</option><option value="hub">Organization</option></select></div>
+                    <div class="formgrid">
+                      <div class="field"><label class="field__label" for="firstName">First name</label><input class="input" id="firstName" maxlength="60" autocomplete="given-name" required></div>
+                      <div class="field"><label class="field__label" for="lastName">Last name</label><input class="input" id="lastName" maxlength="60" autocomplete="family-name" required></div>
+                      <div class="field"><label class="field__label" for="email">Email</label><input class="input" id="email" type="email" autocomplete="email" required></div>
+                      <div class="field"><label class="field__label" for="phone">Phone</label><input class="input" id="phone" type="tel" autocomplete="tel" required></div>
+                      <div class="field wide"><label class="field__label" for="password">Password (at least 6 characters)</label><input class="input" id="password" type="password" minlength="6" autocomplete="new-password" required></div>
+                    </div>
+                    <div id="organization-fields" hidden>
+                      <div class="field"><label class="field__label" for="organizationName">Organization name</label><input class="input" id="organizationName" maxlength="100"></div>
+                      <div class="field"><label class="field__label" for="organizationAddress">Organization address</label><input class="input" id="organizationAddress" maxlength="200" placeholder="Street, number, city"></div>
+                    </div>
+                    <div class="form-message" id="form-message" aria-live="polite"></div>
+                    <div class="actions"><button class="btn btn--loud btn--lg btn--block" type="submit">Create account</button></div>
+                </form>
+                <p class="account-prompt">Already have an account? <a href="login.html">Sign in</a></p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <p class="footer__brand">
+                <svg class="footer__mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect class="bm-bg" x="1.5" y="1.5" width="45" height="45" rx="12" />
+                    <path class="bm-line" d="M11 24l9-9 7 7 7-7 5 5-12 12-7-7-5 5z" />
+                    <path class="bm-spark" d="M24 28l5 5" />
+                </svg>
+                <span class="brand__name">ResQ<span>Hub</span></span>
+            </p>
+            <p class="footer__text">Connecting local organizations with people who can help.</p>
+            <p class="footer__copy">&copy; 2026</p>
+        </div>
+    </footer>
+</body>
+
+</html>
