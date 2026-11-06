@@ -75,8 +75,18 @@
       return;
     }
 
-    UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}. ` +
-      `Delivery: ${UI.formatSlot(result.offer.slot)}, ${Store.deliveryAddress(n)}.`);
-    window.location.href = 'index.html';
+    // The offer is now stored. Replace the form with a confirmation screen
+    // instead of redirecting immediately; avoid a duplicate submission.
+    submit.disabled = true;
+    UI.$('offer-success-message').textContent =
+      `${result.offer.quantity} ${n.unit} for “${n.title}” has been registered. ` +
+      `Your offer is pending confirmation by ${h.name}.`;
+    UI.$('offer-success-delivery').textContent =
+      `Delivery: ${UI.formatSlot(result.offer.slot)} · ${Store.deliveryAddress(n)}`;
+    UI.$('offer-intro').hidden = true;
+    UI.$('offer-view').hidden = true;
+    UI.$('offer-success').hidden = false;
+    document.title = 'Offer submitted | ResQHub';
+    UI.$('offer-success-box').focus();
   });
 })();
