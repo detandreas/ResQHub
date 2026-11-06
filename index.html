@@ -92,6 +92,16 @@
                         <option value="All">All disasters</option>
                     </select>
                 </div>
+                <div class="field">
+                    <label class="field__label" for="status">Status</label>
+                    <select class="input select" id="status">
+                        <option value="All">All statuses</option>
+                        <option value="available">Available</option>
+                        <option value="pledged">Fully pledged</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <button class="btn btn--sm" id="reset-filters" type="reset">Clear filters</button>
             </form>
 
             <p class="results-count" id="result-count" aria-live="polite"></p>
