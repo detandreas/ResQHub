@@ -3,7 +3,7 @@
   'use strict';
   if (!UI.initPage({ only: 'hub' })) return;
 
-  const hub = Store.hub(Store.CURRENT_HUB_ID);
+  const hub = Store.hub(Store.currentHubId());
   const needs = Store.needsOfHub(hub.id).sort((a, b) => b.id - a.id); // newest first
   const offers = Store.offersOfHub(hub.id);
   const pending = offers.filter((o) => o.status === 'pending').length;

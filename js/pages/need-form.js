@@ -7,7 +7,7 @@
   const existing = idParam === null ? null : Store.need(idParam);
 
   // Editing someone else's need (or a missing one) is not allowed.
-  if (idParam !== null && (!existing || existing.hubId !== Store.CURRENT_HUB_ID)) {
+  if (idParam !== null && (!existing || existing.hubId !== Store.currentHubId())) {
     UI.$('need-panel').hidden = true;
     UI.$('not-found').hidden = false;
     return;
@@ -30,6 +30,12 @@
       : '';
     hint.hidden = committed === 0;
   }
+
+  // A new need starts at the organization's own address; editing starts from the saved point and times.
+  field('deliveryAddress').value = existing
+    ? Store.deliveryAddress(existing)
+    : Store.hub(Store.currentHubId())?.address || '';
+  const picker = SlotPicker.mount(field('slot-picker'), existing ? Store.upcomingSlots(existing) : []);
 
   if (existing) {
     document.title = `Edit ${existing.title} | ResQHub`;
@@ -89,6 +95,8 @@
       title: field('title').value,
       quantity: field('quantity').value,
       unit: field('unit').value,
+      deliveryAddress: field('deliveryAddress').value,
+      slots: picker.get(),
       notes: field('notes').value
     });
 
@@ -106,7 +114,7 @@
       published = true;
       [...form.elements].forEach((el) => { el.disabled = true; });
       showSaved('Need published',
-        `“${n.title}” (${amount}) is now live for ${eventTitle}. Contributors can find it on Home and pledge.`,
+        `“${n.title}” (${amount}) is now live for ${eventTitle}.`,
         link('Publish another', 'need-form.html', true) + link('View on Home', 'index.html#needs'));
     } else {
       showQuantityHint(n);

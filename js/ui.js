@@ -47,9 +47,9 @@ const UI = (function () {
 
     document.body.dataset.role = user.role;
 
-    const hub = user.role === 'hub' ? Store.hub(Store.CURRENT_HUB_ID) : null;
+    const hub = user.role === 'hub' ? Store.hub(Store.currentHubId()) : null;
     document.querySelectorAll('[data-account-name]').forEach((el) => {
-      el.textContent = hub ? hub.name : user.username;
+      el.textContent = hub ? hub.name : user.name || user.username;
     });
     document.querySelectorAll('[data-account-role]').forEach((el) => {
       el.textContent = Auth.roleLabel(user.role);
@@ -69,7 +69,7 @@ const UI = (function () {
 
   /** Update every [data-pending-count] badge with the hub's pending offers. */
   function refreshPendingBadge() {
-    const count = Store.pendingOffersOfHub(Store.CURRENT_HUB_ID).length;
+    const count = Store.pendingOffersOfHub(Store.currentHubId()).length;
     document.querySelectorAll('[data-pending-count]').forEach((badge) => {
       badge.textContent = count;
       badge.hidden = count === 0;
@@ -121,6 +121,15 @@ const UI = (function () {
     return 'flood';
   }
 
+  /** '2026-11-09T14:00' -> 'Mon 9 Nov, 14:00' (or just 'Mon 9 Nov' with withTime = false) */
+  function formatSlot(slot, withTime = true) {
+    const d = new Date(slot);
+    if (Number.isNaN(d.getTime())) return String(slot ?? '');
+    const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
+    const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
+    return `${weekday} ${d.getDate()} ${month}${withTime ? `, ${slot.slice(11, 16)}` : ''}`; // the same text in every browser
+  }
+
   const chip = (e) => `<span class="chip"><img src="${ICONS[eventKind(e)]}" alt="">${esc(e.type)}</span>`;
   const photo = (e) => `<span class="photo photo--${eventKind(e)}" aria-hidden="true"></span>`;
   const bar = (pct) => `<progress class="bar" value="${pct}" max="100" aria-label="${pct}% received">${pct}%</progress>`;
@@ -147,7 +156,7 @@ const UI = (function () {
    */
   function needAction(n, editClass = '') {
     if (role() === 'hub') {
-      return n.hubId === Store.CURRENT_HUB_ID
+      return n.hubId === Store.currentHubId()
         ? `<a class="${['btn', 'btn--sm', editClass].filter(Boolean).join(' ')}" href="need-form.html?id=${n.id}">Edit need</a>`
         : '';
     }
@@ -251,6 +260,7 @@ const UI = (function () {
     eventKind,
     chip,
     formatDate,
+    formatSlot,
     plural,
     empty,
     needCard,
