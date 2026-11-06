@@ -10,19 +10,6 @@
     Auth.logout();
   });
 
-  // Demo buttons are deliberately separate from email-based registered accounts.
-  document.querySelectorAll('[data-demo-login]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const account = button.dataset.demoLogin;
-      const result = Auth.login(account, '123');
-      if (!result.ok) {
-        UI.notice(result.error, 'error', 'form-message');
-        return;
-      }
-      window.location.href = Auth.landing(result.user.role);
-    });
-  });
-
   const form = UI.$('login-form');
   const username = UI.$('username');
   const password = UI.$('password');
