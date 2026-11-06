@@ -17,6 +17,16 @@
   const submit = UI.$('submit-offer');
   const slots = Store.upcomingSlots(n);
 
+  // Registered Contributors have already provided these details at sign-up.
+  // Prefill once; keep the inputs editable for a different delivery contact.
+  const contact = Auth.contactDetails();
+  if (contact) {
+    UI.$('name').value = contact.name;
+    UI.$('email').value = contact.email;
+    UI.$('phone').value = contact.phone;
+    UI.$('contact-hint').hidden = false;
+  }
+
   function renderSummary() {
     const left = Store.remaining(n);
     UI.$('need-requested').textContent = `${n.quantity} ${n.unit}`;
