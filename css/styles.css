@@ -1299,7 +1299,7 @@ textarea.input {
   margin-top: 24px;
 }
 
-/* ---------- 19. Empty states and shortcuts ---------- */
+/* ---------- 19. Empty states ---------- */
 .empty {
   grid-column: 1 / -1;
   display: grid;
@@ -1314,32 +1314,6 @@ textarea.input {
 
 .empty__title { color: var(--ink); font-size: 18px; font-weight: 700; }
 .empty .btn { margin-top: 6px; }
-
-.shortcuts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.shortcut {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 30px 32px;
-  border-radius: var(--radius);
-  background: var(--soft);
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -.03em;
-  text-decoration: none;
-  transition: background-color .15s;
-}
-
-.shortcut:hover { background: color-mix(in srgb, var(--soft) 70%, var(--base)); }
-.shortcut span { font-size: 28px; transition: transform .2s; }
-.shortcut:hover span { transform: translate(3px, -3px); }
 
 /* ---------- 20. Login ---------- */
 .login {
@@ -1453,8 +1427,7 @@ textarea.input {
   .section__head { flex-direction: column; align-items: flex-start; }
 
   .cards,
-  .formgrid,
-  .shortcuts { grid-template-columns: 1fr; }
+  .formgrid { grid-template-columns: 1fr; }
   .slot-picker { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
   .cal__day { height: 36px; }
   .times__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1484,7 +1457,6 @@ textarea.input {
   .form-done { padding: 24px 16px; }
   .form-done__box { padding: 24px 20px 22px; }
   .form-done__actions .btn { flex: 1 1 100%; }
-  .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
   .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; }
