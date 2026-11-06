@@ -32,13 +32,26 @@ const UI = (function () {
    * Set up the shared header on every page except login.html.
    * Signed-out visitors go to login.html.
    * Pass { only: 'hub' } or { only: 'citizen' } on pages for one role; the other role goes home.
+   * Public browse pages pass { allowGuest: true } to permit read-only visitors.
    * Returns false when the page is redirecting away.
    */
-  function initPage({ only } = {}) {
+  function initPage({ only, allowGuest = false } = {}) {
     const user = Auth.current();
-    if (!user) {
+    if (!user && !allowGuest) {
       window.location.replace('login.html');
       return false;
+    }
+    if (!user && only) {
+      window.location.replace('login.html');
+      return false;
+    }
+    if (!user) {
+      document.body.dataset.role = 'guest';
+      document.querySelectorAll('.account').forEach((container) => {
+        container.innerHTML = '<span class="account__who"><strong>Guest</strong><small>Read-only access</small></span><a class="btn btn--ghost btn--sm" href="login.html">Sign in</a>';
+      });
+      showStoredFlash();
+      return true;
     }
     if (only && user.role !== only) {
       window.location.replace('index.html');
@@ -158,6 +171,11 @@ const UI = (function () {
     if (role() === 'hub') {
       return n.hubId === Store.currentHubId()
         ? `<a class="${['btn', 'btn--sm', editClass].filter(Boolean).join(' ')}" href="need-form.html?id=${n.id}">Edit need</a>`
+        : '';
+    }
+    if (role() !== 'citizen') {
+      return Store.remaining(n) > 0
+        ? '<a class="btn btn--sm" href="login.html">Sign in to offer help</a>'
         : '';
     }
     return Store.remaining(n) > 0
