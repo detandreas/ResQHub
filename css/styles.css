@@ -40,11 +40,11 @@
   /* Photos (blended into the sage hue, see .photo) */
   --img-hero: url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2000&q=80");
   /* Locally stored illustrative images, one for each disaster category. */
-  --img-flood: url("../images/flood.webp");
-  --img-fire: url("../images/wildfire.webp");
-  --img-quake: url("../images/earthquake.webp");
-  --img-landslide: url("../images/landslide.webp");
-  --img-industrial: url("../images/industrial.webp");
+  --img-flood: url("https://images.unsplash.com/photo-1760500959972-27f751e094b1?auto=format&fit=crop&w=1600&q=85");
+  --img-fire: url("https://images.unsplash.com/photo-1759699631373-b8103eddef4b?auto=format&fit=crop&w=1600&q=85");
+  --img-quake: url("https://images.unsplash.com/photo-1677233860259-ce1a8e0f8498?auto=format&fit=crop&w=1600&q=85");
+  --img-landslide: url("https://images.unsplash.com/photo-1687555821474-c0b2ed52a558?auto=format&fit=crop&w=1600&q=85");
+  --img-industrial: url("https://images.unsplash.com/photo-1708300251110-0f0affccb436?auto=format&fit=crop&w=1600&q=85");
 }
 
 /* ---------- 2. Base ---------- */
