@@ -1377,7 +1377,11 @@ textarea.input {
   border-radius: var(--radius-lg);
 }
 
-.login__submit { width: 100%; justify-content: space-between; }
+/* Match the primary and guest buttons: centered labels and equal widths. */
+.login .actions { width: 100%; }
+.login__submit { width: 100%; justify-content: center; position: relative; }
+.login__submit .arrow { position: absolute; right: 22px; }
+.guest-entry { width: 100%; }
 .panel__title--lg + .form { margin-top: 24px; }
 .guest-entry { margin-top: 12px; }
 .guest-entry .btn { width: 100%; }
