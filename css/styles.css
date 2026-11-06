@@ -1128,10 +1128,11 @@ textarea.input {
 .login__media {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 40px;
-  padding: 40px 44px 44px;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 44px;
   border-radius: var(--radius-lg);
+  text-align: center;
 }
 
 .login__title {
@@ -1139,13 +1140,6 @@ textarea.input {
   font-weight: 800;
   line-height: .94;
   letter-spacing: -.045em;
-}
-
-.login__text {
-  max-width: 440px;
-  margin-top: 22px;
-  color: var(--on-photo-muted);
-  font-size: 16px;
 }
 
 .login__panel {
@@ -1264,9 +1258,8 @@ textarea.input {
   .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
-  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; gap: 28px; }
+  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; }
   .login__title { font-size: 46px; }
-  .login__text { margin-top: 14px; font-size: 15px; }
   .login__panel { padding: 24px 20px; border-radius: 22px; }
 }
 
