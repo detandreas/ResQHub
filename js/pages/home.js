@@ -1,7 +1,7 @@
 /* index.html: hero numbers and every need, filtered live by search, category and disaster. */
 (function () {
   'use strict';
-  if (!UI.initPage()) return;
+  if (!UI.initPage({ allowGuest: true })) return;
 
   const form = UI.$('filters');
   const search = UI.$('search');
