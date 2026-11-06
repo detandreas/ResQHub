@@ -260,6 +260,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .btn--light:hover { --b-bg: var(--surface); }
 
 .btn--lg { min-height: 54px; padding: 0 26px; font-size: 15px; }
+.btn--block { width: 100%; }
 .btn--sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
 
 .btn:disabled,
