@@ -260,7 +260,6 @@ body[data-role="hub"] .citizen-only { display: none; }
 .btn--light:hover { --b-bg: var(--surface); }
 
 .btn--lg { min-height: 54px; padding: 0 26px; font-size: 15px; }
-.btn--block { width: 100%; }
 .btn--sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
 
 .btn:disabled,
@@ -824,7 +823,8 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .row__qty { font-size: 28px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
 .row__qty small { margin-left: 4px; color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
-.row__qty + .btn { margin-top: 10px; }
+.row__hint { margin-bottom: 10px; color: var(--muted); font-size: 12.5px; }
+.row__qty + .btn { margin-top: 10px; } /* no hint between them on the dashboard */
 
 .hub-group + .hub-group { margin-top: 36px; }
 
@@ -953,163 +953,9 @@ textarea.input {
   background-repeat: no-repeat;
 }
 
+.hint { color: var(--muted); font-size: 12.5px; }
+
 .form .actions { margin-top: 4px; }
-
-/* Need form: tighter fields */
-.panel--form .formgrid { gap: 14px 16px; }
-.panel--form textarea.input { min-height: 76px; }
-
-/* Delivery-time picker (js/pages/slot-picker.js): the calendar, and the times of the chosen day beside it */
-.slot-picker {
-  display: grid;
-  grid-template-columns: minmax(0, 65fr) minmax(0, 35fr); /* the calendar and the times, 65 / 35 */
-  gap: 28px;
-  padding: 14px 16px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-}
-
-.cal__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.cal__head strong { font-size: 14px; letter-spacing: -.01em; }
-
-.cal__nav {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--ink);
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background-color .15s;
-}
-
-.cal__nav:hover:not(:disabled) { background: var(--soft-tint); }
-.cal__nav:disabled { opacity: .35; cursor: not-allowed; }
-
-.cal__grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 2px;
-}
-
-.cal__dow {
-  padding-bottom: 4px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.cal__day {
-  position: relative;
-  height: 32px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--ink);
-  font: 600 13px/1 var(--font);
-  cursor: pointer;
-  transition: background-color .15s, color .15s;
-}
-
-.cal__day:hover:not(:disabled) { background: var(--soft-tint); }
-.cal__day:disabled { opacity: .35; cursor: not-allowed; }
-.cal__day.is-today { box-shadow: inset 0 0 0 1px var(--line-strong); }
-.cal__day[aria-pressed="true"] { background: var(--ink); color: var(--base); }
-
-/* A dot under a day that already has chosen times */
-.cal__day.has-times::after {
-  content: "";
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  margin-left: -2px;
-  border-radius: 50%;
-  background: var(--loud);
-}
-
-.times { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.times__title { display: grid; gap: 1px; }
-.times__title strong { font-size: 14px; letter-spacing: -.01em; }
-.times__title span { color: var(--muted); font-size: 12px; }
-
-.times__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)); /* three times in every row */
-  align-content: start;
-  gap: 6px;
-}
-
-.time {
-  min-height: 32px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--pill);
-  background: transparent;
-  color: var(--ink);
-  font: 600 12.5px/1 var(--font);
-  cursor: pointer;
-  transition: background-color .15s, box-shadow .15s;
-}
-
-.time:hover:not(:disabled) { background: var(--soft-tint); }
-.time:disabled { opacity: .35; cursor: not-allowed; }
-.time[aria-pressed="true"] { border-color: var(--ink); background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); }
-
-.slot-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.slot-list:empty { display: none; }
-
-.slot-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 5px 5px 14px;
-  border-radius: var(--pill);
-  background: var(--soft-tint);
-  box-shadow: inset 0 0 0 1px var(--line);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.slot-chip button {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background-color .15s, color .15s;
-}
-
-.slot-chip button:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); color: var(--ink); }
-.slot-chip button:disabled { cursor: not-allowed; opacity: .5; }
 .panel__sub + .form { margin-top: 24px; }
 .form-message:empty { display: none; }
 
@@ -1190,16 +1036,6 @@ textarea.input {
 .status--completed { background: var(--ink); color: var(--base); }
 .status--pledged { background: transparent; box-shadow: inset 0 0 0 1px var(--line-strong); }
 .status--declined { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
-
-/* Need statuses on a dark photo card: dark text on the light fill, light text on the others */
-.on-photo .status--available { color: var(--ink); }
-.on-photo .status--pledged {
-  background: var(--glass);
-  color: var(--on-photo);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--base) 45%, transparent);
-  backdrop-filter: blur(8px);
-}
-.on-photo .status--completed { color: var(--on-photo); box-shadow: inset 0 0 0 1px var(--on-photo-line); }
 
 /* Confirm / decline dialog (offers.html). Native <dialog>: top layer, Esc closes */
 .dialog {
@@ -1291,11 +1127,10 @@ textarea.input {
 .login__media {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 44px;
+  justify-content: flex-end;
+  gap: 40px;
+  padding: 40px 44px 44px;
   border-radius: var(--radius-lg);
-  text-align: center;
 }
 
 .login__title {
@@ -1303,6 +1138,13 @@ textarea.input {
   font-weight: 800;
   line-height: .94;
   letter-spacing: -.045em;
+}
+
+.login__text {
+  max-width: 440px;
+  margin-top: 22px;
+  color: var(--on-photo-muted);
+  font-size: 16px;
 }
 
 .login__panel {
@@ -1314,11 +1156,6 @@ textarea.input {
 }
 
 .login__submit { width: 100%; justify-content: space-between; }
-.panel__title--lg + .form { margin-top: 24px; }
-.guest-entry { margin-top: 12px; }
-.guest-entry .btn { width: 100%; }
-.account-prompt { margin-top: 24px; color: var(--muted); font-size: 14px; text-align: center; }
-.account-prompt a { color: var(--ink); font-weight: 600; }
 
 /* ---------- 21. Footer ---------- */
 .footer {
@@ -1393,10 +1230,6 @@ textarea.input {
   .cards,
   .formgrid,
   .shortcuts { grid-template-columns: 1fr; }
-  .slot-picker { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
-  .cal__day { height: 36px; }
-  .times__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .time { min-height: 36px; }
   .card { min-height: 460px; }
 
   .banner { min-height: 0; padding: 22px 20px 24px; border-radius: 22px; }
@@ -1425,8 +1258,9 @@ textarea.input {
   .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
-  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; }
+  .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; gap: 28px; }
   .login__title { font-size: 46px; }
+  .login__text { margin-top: 14px; font-size: 15px; }
   .login__panel { padding: 24px 20px; border-radius: 22px; }
 }
 
@@ -1437,4 +1271,88 @@ textarea.input {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Registration and delivery scheduling additions */
+.account-prompt { margin-top:22px; color:var(--muted); font-size:14px; }
+.account-prompt a { color:var(--ink); font-weight:700; text-decoration:underline; }
+.delivery-section { margin:26px 0 20px; padding-top:22px; border-top:1px solid var(--line); }
+.delivery-section .field { margin:15px 0; }
+.slot-entry { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.slot-entry .input { flex:1; min-width:190px; }
+.slot-list { display:grid; gap:8px; margin:12px 0; }
+.slot-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 12px; border:1px solid var(--line); border-radius:12px; }
+.delivery-address { padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-weight:600; }
+
+/* English calendar for organization delivery slots. All styles remain external. */
+.english-picker{position:relative;flex:1;min-width:230px}
+.english-picker__trigger{width:100%;text-align:left;cursor:pointer;min-height:44px}
+.english-picker__panel{position:absolute;top:calc(100% + 6px);left:0;z-index:30;width:min(350px,calc(100vw - 44px));padding:16px;background:#fff;border:1px solid #d5ded9;border-radius:14px;box-shadow:0 16px 42px rgba(20,50,38,.16)}
+.english-picker__panel[hidden]{display:none}
+.english-picker__heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.english-picker__calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.english-picker__weekday{font-size:11px;font-weight:700;color:#64756b;padding:5px 0}
+.english-picker__day{border:0;background:transparent;border-radius:8px;min-height:34px;cursor:pointer;font:inherit;color:#243e32}
+.english-picker__day:hover:not(:disabled){background:#e9f2ed}
+.english-picker__day:disabled{opacity:.25;cursor:not-allowed}
+.english-picker__day--selected{background:#255a43!important;color:#fff!important}
+.english-picker__time{display:flex;align-items:center;gap:8px;margin-top:14px}
+.english-picker__time label{font-size:12px;font-weight:600}
+.english-picker__time .input{min-width:0;width:72px;flex:0 0 72px}
+.english-picker__footer{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+
+/* Registration: consistent spacing when organization-only fields appear. */
+#register-form .formgrid { column-gap: 22px; row-gap: 20px; }
+#register-form #organization-fields:not([hidden]) { display: grid; gap: 20px; padding-top: 6px; }
+#register-form #organization-fields .field { gap: 9px; }
+#register-form .field__label { line-height: 1.4; }
+#register-form .formgrid .field { gap: 9px; }
+/* Date picker: one clear time selector, no separate hour/minute controls. */
+.english-picker__time { display: grid; grid-template-columns: 1fr; gap: 7px; margin-top: 16px; }
+.english-picker__time label { font-size: 13px; }
+.english-picker__time .input { width: 100%; min-width: 0; flex: none; }
+.english-picker__heading .btn:disabled { opacity: .3; cursor: not-allowed; }
+.english-picker__panel { max-height: min(560px, 78vh); overflow-y: auto; }
+@media (max-width: 540px) { #register-form .formgrid { grid-template-columns: 1fr; } }
+
+/* Guest browsing is read-only; hide all contribution-only prompts. */
+body[data-role="guest"] .citizen-only, body[data-role="guest"] .hub-only { display: none; }
+.guest-entry { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line, #e3e7e9); display: grid; gap: .65rem; }
+.guest-entry > p { margin: 0; }
+.guest-entry .btn { justify-self: start; }
+
+/* Offer submission confirmation */
+.offer-success { margin: 32px auto 64px; text-align: center; }
+.offer-success .form-done__actions { justify-content: center; }
+
+/* Standalone contribution confirmation: no overlay or nested panels. */
+.offer-success {
+  position: static;
+  inset: auto;
+  display: block;
+  width: min(100%, 660px);
+  max-width: 660px;
+  margin: 48px auto 72px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  text-align: center;
+}
+.offer-success[hidden] { display: none !important; }
+.offer-success .form-done__box {
+  width: 100%;
+  padding: clamp(28px, 5vw, 52px);
+  border-radius: 22px;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-lift);
+}
+.offer-success .form-done__title { font-size: clamp(25px, 3.5vw, 32px); }
+.offer-success .form-done__text { max-width: 530px; margin: 14px auto 0; line-height: 1.65; }
+.offer-success .form-done__actions { justify-content: center; margin-top: 28px; }
+@media (max-width: 540px) {
+  .offer-success { margin: 24px auto 48px; }
+  .offer-success .form-done__box { padding: 28px 20px; }
 }
