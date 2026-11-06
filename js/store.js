@@ -103,8 +103,23 @@ const Store = (function () {
 
   /** Where contributors bring what they pledged: the need's own point, else its organization's address. */
   const deliveryAddress = (n) => n.deliveryAddress || hub(n.hubId)?.address || '';
-  /** Delivery times that are still in the future, earliest first. */
-  const upcomingSlots = (n) => (n.slots || []).filter((s) => new Date(s) > new Date()).sort();
+  const pad = (number) => String(number).padStart(2, '0');
+  const inFuture = (slot) => new Date(slot) > new Date();
+
+  /** Times a need without its own list accepts deliveries (the demo needs): 10:00 and 16:00 on each of the next 3 days. */
+  function defaultSlots() {
+    const times = [];
+    for (let ahead = 1; ahead <= 3; ahead++) {
+      const day = new Date();
+      day.setDate(day.getDate() + ahead);
+      const date = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+      times.push(`${date}T10:00`, `${date}T16:00`);
+    }
+    return times;
+  }
+
+  /** Delivery times a contributor can still choose from, earliest first. */
+  const upcomingSlots = (n) => (n.slots || defaultSlots()).filter(inFuture).sort();
 
   const offersFor = (n) => db.offers.filter((o) => o.needId === n.id);
   const sumOf = (n, status) => offersFor(n)
@@ -187,10 +202,10 @@ const Store = (function () {
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > left) {
       return fail(`Please enter a whole number between 1 and ${left}.`);
     }
-    if (slots.length > 0 && !slots.includes(slot)) return fail('Please choose a delivery time.');
+    if (slots.length === 0) return fail('This need has no delivery times available right now.');
+    if (!slots.includes(slot)) return fail('Please choose one of the available delivery times.');
 
-    const offer = { id: db.nextId++, needId: n.id, name, email, phone, quantity, status: 'pending', date: today() };
-    if (slots.length > 0) offer.slot = slot;
+    const offer = { id: db.nextId++, needId: n.id, name, email, phone, quantity, status: 'pending', date: today(), slot };
     db.offers.push(offer);
     save();
     return { ok: true, offer };
@@ -210,13 +225,14 @@ const Store = (function () {
       quantity: Number(input.quantity),
       unit: text(input.unit, 30),
       deliveryAddress: text(input.deliveryAddress, 250),
-      slots: [...new Set(input.slots || [])].filter((s) => SLOT.test(s)).sort(),
+      slots: [...new Set(input.slots || [])].filter((s) => SLOT.test(s) && inFuture(s)).sort(),
       notes: text(input.notes, 300)
     };
 
     if (!event(data.eventId)) return fail('Choose a disaster event.');
     if (!CATEGORIES.includes(data.category)) return fail('Choose a category.');
     if (!data.title || !data.unit || !data.deliveryAddress) return fail('Complete all required fields.');
+    if (data.slots.length === 0) return fail('Add at least one delivery time.');
     if (!Number.isInteger(data.quantity) || data.quantity < 1 || data.quantity > MAX_QUANTITY) {
       return fail(`Required quantity must be a whole number between 1 and ${MAX_QUANTITY}.`);
     }

@@ -785,6 +785,36 @@ body[data-role="hub"] .citizen-only { display: none; }
 
 .on-photo .facts dt { color: var(--on-photo-muted); }
 
+/* Where to bring the pledge is the one fact a contributor must not miss, so it is the brightest block on the photo */
+.callout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--base);
+  color: var(--ink);
+}
+
+.callout__icon {
+  flex: none;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 50%;
+  background: var(--loud);
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.callout__label { color: var(--muted); font-size: 12px; font-weight: 600; }
+.callout__text { margin-top: 1px; font-size: 17px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+
 /* ---------- 14. Need rows (disaster details, dashboard) ---------- */
 .rows { display: grid; gap: 12px; }
 
@@ -1069,6 +1099,38 @@ textarea.input {
 .time:hover:not(:disabled) { background: var(--soft-tint); }
 .time:disabled { opacity: .35; cursor: not-allowed; }
 .time[aria-pressed="true"] { border-color: var(--ink); background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* One-of-several choice shown as buttons (the delivery times on the offer form): a real radio under each */
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice { position: relative; }
+
+.choice input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.choice span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color .15s, box-shadow .15s;
+}
+
+.choice:hover input:not(:disabled) + span { background: var(--soft-tint); }
+.choice input:checked + span { border-color: var(--ink); background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); }
+.choice input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+.choice input:disabled { cursor: not-allowed; }
+.choice input:disabled + span { opacity: .5; }
 
 .slot-list {
   display: flex;

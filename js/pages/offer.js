@@ -15,7 +15,6 @@
   const form = UI.$('offer-form');
   const qty = UI.$('qty');
   const submit = UI.$('submit-offer');
-  const slot = UI.$('delivery-slot');
   const slots = Store.upcomingSlots(n);
 
   function renderSummary() {
@@ -28,8 +27,9 @@
       ? `You can pledge up to ${left} ${n.unit}.`
       : 'This need is fully pledged. Thank you!';
 
-    const closed = left === 0;
-    form.querySelectorAll('input, select').forEach((input) => { input.disabled = closed; });
+    // Without a delivery time to choose, nothing can be pledged.
+    const closed = left === 0 || slots.length === 0;
+    form.querySelectorAll('input').forEach((input) => { input.disabled = closed; });
     submit.disabled = closed;
   }
 
@@ -43,10 +43,10 @@
   UI.$('qty-unit').textContent = n.unit;
   UI.$('delivery-address').textContent = Store.deliveryAddress(n);
 
-  // Needs without upcoming delivery times simply have no time to choose.
-  slot.closest('.field').hidden = slots.length === 0;
-  slot.required = slots.length > 0;
-  slot.innerHTML = slots.map((s) => `<option value="${UI.esc(s)}">${UI.esc(UI.formatSlot(s))}</option>`).join('');
+  // Nothing is preselected: the contributor has to pick one of the times the organization offers.
+  UI.$('delivery-slots').innerHTML = slots.map((s) => `
+    <label class="choice"><input type="radio" name="slot" value="${UI.esc(s)}" required><span>${UI.esc(UI.formatSlot(s))}</span></label>`).join('') ||
+    '<p class="field__hint">No delivery times are available right now. The organization needs to add new ones.</p>';
   renderSummary();
 
   form.addEventListener('submit', (event) => {
@@ -55,7 +55,7 @@
       name: UI.$('name').value,
       email: UI.$('email').value,
       phone: UI.$('phone').value,
-      slot: slot.value,
+      slot: form.querySelector('input[name="slot"]:checked')?.value ?? '',
       quantity: qty.value
     });
 
@@ -65,7 +65,8 @@
       return;
     }
 
-    UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}.`);
+    UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}. ` +
+      `Delivery: ${UI.formatSlot(result.offer.slot)}, ${Store.deliveryAddress(n)}.`);
     window.location.href = 'index.html';
   });
 })();

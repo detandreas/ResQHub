@@ -58,6 +58,13 @@
                 </div>
                 <h2 class="panel__title panel__title--lg" id="need-title">Relief need</h2>
                 <p class="panel__sub" id="need-context"></p>
+                <div class="callout">
+                    <svg class="callout__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.6" /></svg>
+                    <div>
+                        <p class="callout__label">Delivery / meeting point</p>
+                        <p class="callout__text" id="delivery-address"></p>
+                    </div>
+                </div>
                 <dl class="facts">
                     <div><dt>Requested</dt><dd id="need-requested">–</dd></div>
                     <div><dt>Received</dt><dd id="need-received">–</dd></div>
@@ -72,6 +79,11 @@
 
                 <form class="form" id="offer-form">
                     <div class="field">
+                        <label class="field__label" for="qty">Quantity (<span id="qty-unit">units</span>)</label>
+                        <input class="input" id="qty" name="quantity" type="number" min="1" step="1" required value="1" aria-describedby="qty-hint">
+                        <p class="field__hint" id="qty-hint"></p>
+                    </div>
+                    <div class="field">
                         <label class="field__label" for="name">Full name</label>
                         <input class="input" id="name" name="name" required maxlength="80" autocomplete="name" placeholder="e.g. Alex Morgan">
                     </div>
@@ -80,12 +92,9 @@
                         <input class="input" id="email" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="you@example.com">
                     </div>
                     <div class="field"><label class="field__label" for="phone">Phone</label><input class="input" id="phone" type="tel" autocomplete="tel" maxlength="25" required></div>
-                    <div class="field"><label class="field__label">Delivery / meeting point</label><p class="delivery-address" id="delivery-address"></p></div>
-                    <div class="field"><label class="field__label" for="delivery-slot">Available delivery times</label><select class="input select" id="delivery-slot" required></select><p class="field__hint">Choose a time offered by the organization.</p></div>
                     <div class="field">
-                        <label class="field__label" for="qty">Quantity (<span id="qty-unit">units</span>)</label>
-                        <input class="input" id="qty" name="quantity" type="number" min="1" step="1" required value="1" aria-describedby="qty-hint">
-                        <p class="field__hint" id="qty-hint"></p>
+                        <span class="field__label" id="slot-label">Choose a delivery time</span>
+                        <div class="choices" id="delivery-slots" role="radiogroup" aria-labelledby="slot-label"></div>
                     </div>
                     <div class="form-message" id="form-message" aria-live="polite"></div>
                     <div class="actions">
