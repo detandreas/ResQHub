@@ -10,6 +10,19 @@
     Auth.logout();
   });
 
+  // Demo buttons are deliberately separate from email-based registered accounts.
+  document.querySelectorAll('[data-demo-login]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const account = button.dataset.demoLogin;
+      const result = Auth.login(account, '123');
+      if (!result.ok) {
+        UI.notice(result.error, 'error', 'form-message');
+        return;
+      }
+      window.location.href = Auth.landing(result.user.role);
+    });
+  });
+
   const form = UI.$('login-form');
   const username = UI.$('username');
   const password = UI.$('password');
@@ -28,7 +41,7 @@
 
     if (!username.value.trim() || !password.value) {
       markInvalid(true);
-      UI.notice('Enter your username and password.', 'error', 'form-message');
+      UI.notice('Enter your email address and password.', 'error', 'form-message');
       (username.value.trim() ? password : username).focus();
       return;
     }
