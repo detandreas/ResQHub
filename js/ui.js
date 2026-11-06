@@ -173,11 +173,8 @@ const UI = (function () {
         ? `<a class="${['btn', 'btn--sm', editClass].filter(Boolean).join(' ')}" href="need-form.html?id=${n.id}">Edit need</a>`
         : '';
     }
-    if (role() !== 'citizen') {
-      return Store.remaining(n) > 0
-        ? '<a class="btn btn--sm" href="login.html">Sign in to offer help</a>'
-        : '';
-    }
+    // Guest visitors may browse disaster details and published needs, but cannot pledge.
+    if (role() !== 'citizen') return '';
     return Store.remaining(n) > 0
       ? `<a class="btn btn--loud btn--sm" href="offer.html?need=${n.id}">Offer help <span class="arrow" aria-hidden="true">→</span></a>`
       : '';
