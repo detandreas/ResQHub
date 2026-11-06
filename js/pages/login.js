@@ -8,6 +8,12 @@
     return;
   }
 
+  UI.$('guest-entry').addEventListener('click', (event) => {
+    event.preventDefault();
+    if (Auth.enterGuest()) window.location.href = 'disasters.html';
+    else UI.notice('Guest access is unavailable in this browser.', 'error', 'form-message');
+  });
+
   const form = UI.$('login-form');
   const username = UI.$('username');
   const password = UI.$('password');

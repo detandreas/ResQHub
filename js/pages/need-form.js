@@ -14,6 +14,12 @@
   }
 
   const form = UI.$('need-form');
+  let slots=[];
+  const formatSlot=s=>new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',hour12:false}).format(new Date(s));
+  function drawSlots(){UI.$('slot-list').innerHTML=slots.map((s,i)=>`<div class="slot-item"><span>${UI.esc(formatSlot(s))}</span><button class="btn btn--ghost btn--sm" type="button" data-remove-slot="${i}" aria-label="Remove time slot">Remove</button></div>`).join('')||'<p class="field__hint">No time slots added yet.</p>';}
+  UI.$('add-slot').addEventListener('click',()=>{const v=EnglishDatePicker.getValue();if(!v||new Date(v).getTime()<=Date.now()){UI.notice('Choose a future date and time.','error','form-message');return;}if(!slots.includes(v))slots.push(v);slots.sort();EnglishDatePicker.clear();UI.clearNotice('form-message');drawSlots();});
+  UI.$('slot-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove-slot]');if(!b)return;slots.splice(Number(b.dataset.removeSlot),1);drawSlots();});
+  drawSlots();
   const field = (id) => UI.$(id);
 
   field('eventId').innerHTML = Store.events()
@@ -31,12 +37,6 @@
     hint.hidden = committed === 0;
   }
 
-  // A new need starts at the organization's own address; editing starts from the saved point and times.
-  field('deliveryAddress').value = existing
-    ? Store.deliveryAddress(existing)
-    : Store.hub(Store.currentHubId())?.address || '';
-  const picker = SlotPicker.mount(field('slot-picker'), existing ? Store.upcomingSlots(existing) : []);
-
   if (existing) {
     document.title = `Edit ${existing.title} | ResQHub`;
     field('form-title').textContent = 'Edit relief need';
@@ -47,6 +47,8 @@
     field('quantity').value = existing.quantity;
     field('unit').value = existing.unit;
     field('notes').value = existing.notes || '';
+    field('deliveryAddress').value=existing.deliveryAddress||'';
+    slots=[...Store.slotsFor(existing)];drawSlots();
     showQuantityHint(existing);
   }
 
@@ -95,9 +97,9 @@
       title: field('title').value,
       quantity: field('quantity').value,
       unit: field('unit').value,
-      deliveryAddress: field('deliveryAddress').value,
-      slots: picker.get(),
-      notes: field('notes').value
+      notes: field('notes').value,
+      deliveryAddress:field('deliveryAddress').value,
+      deliverySlots:slots
     });
 
     if (!result.ok) {
@@ -114,7 +116,7 @@
       published = true;
       [...form.elements].forEach((el) => { el.disabled = true; });
       showSaved('Need published',
-        `“${n.title}” (${amount}) is now live for ${eventTitle}.`,
+        `“${n.title}” (${amount}) is now live for ${eventTitle}. Contributors can find it on Home and pledge.`,
         link('Publish another', 'need-form.html', true) + link('View on Home', 'index.html#needs'));
     } else {
       showQuantityHint(n);

@@ -15,8 +15,13 @@
   const form = UI.$('offer-form');
   const qty = UI.$('qty');
   const submit = UI.$('submit-offer');
-  const slot = UI.$('delivery-slot');
-  const slots = Store.upcomingSlots(n);
+  const account=Auth.current();
+  if(account?.firstName)UI.$('name').value=[account.firstName,account.lastName].filter(Boolean).join(' ');
+  if(account?.email)UI.$('email').value=account.email;
+  if(account?.phone)UI.$('phone').value=account.phone;
+  const slots=Store.slotsFor(n).filter(s=>new Date(s).getTime()>Date.now());
+  UI.$('delivery-address').textContent=n.deliveryAddress||e.location;
+  UI.$('delivery-slot').innerHTML='<option value="">Select a delivery time</option>'+slots.map(s=>`<option value="${UI.esc(s)}">${UI.esc(new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',hour12:false}).format(new Date(s)))}</option>`).join('');
 
   function renderSummary() {
     const left = Store.remaining(n);
@@ -28,9 +33,10 @@
       ? `You can pledge up to ${left} ${n.unit}.`
       : 'This need is fully pledged. Thank you!';
 
-    const closed = left === 0;
-    form.querySelectorAll('input, select').forEach((input) => { input.disabled = closed; });
+    const closed = left === 0 || slots.length===0;
+    form.querySelectorAll('input').forEach((input) => { input.disabled = closed; });
     submit.disabled = closed;
+    if(!slots.length)UI.$('qty-hint').textContent='No upcoming delivery times are available. Please contact the organization.';
   }
 
   document.title = `Offer help: ${n.title} | ResQHub`;
@@ -41,12 +47,6 @@
   UI.$('need-context').textContent = `${e.title} · ${h.name}`;
   UI.$('need-notes').textContent = n.notes;
   UI.$('qty-unit').textContent = n.unit;
-  UI.$('delivery-address').textContent = Store.deliveryAddress(n);
-
-  // Needs without upcoming delivery times simply have no time to choose.
-  slot.closest('.field').hidden = slots.length === 0;
-  slot.required = slots.length > 0;
-  slot.innerHTML = slots.map((s) => `<option value="${UI.esc(s)}">${UI.esc(UI.formatSlot(s))}</option>`).join('');
   renderSummary();
 
   form.addEventListener('submit', (event) => {
@@ -54,8 +54,8 @@
     const result = Store.addOffer(n.id, {
       name: UI.$('name').value,
       email: UI.$('email').value,
-      phone: UI.$('phone').value,
-      slot: slot.value,
+      phone:UI.$('phone').value,
+      slot:UI.$('delivery-slot').value,
       quantity: qty.value
     });
 
@@ -65,7 +65,12 @@
       return;
     }
 
-    UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}.`);
-    window.location.href = 'index.html';
+    UI.$('offer-view').hidden = true;
+    UI.$('offer-intro').hidden = true;
+    UI.$('offer-success-message').textContent = `Your offer of ${result.offer.quantity} ${n.unit} has been successfully submitted to ${h.name}.`;
+    const date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'short', hour12: false }).format(new Date(result.offer.slot));
+    UI.$('offer-success-delivery').textContent = `Scheduled delivery: ${date}. Delivery point: ${n.deliveryAddress || e.location}.`;
+    UI.$('offer-success').hidden = false;
+    UI.$('offer-success-box').focus();
   });
 })();

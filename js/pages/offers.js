@@ -41,7 +41,8 @@
             <span class="status status--${UI.esc(o.status)}">${UI.esc(STATUS_LABELS[o.status] || o.status)}</span>
           </div>
           <p class="offer__title">${UI.esc(n.title)} · ${o.quantity} ${UI.esc(n.unit)}</p>
-          <p class="offer__meta">${[o.name, o.email, o.phone, o.slot && `Delivery ${UI.formatSlot(o.slot)}`, UI.formatDate(o.date)].filter(Boolean).map(UI.esc).join(' · ')}</p>
+          <p class="offer__meta">${UI.esc(o.name)} · ${UI.esc(o.email)}${o.phone?' · '+UI.esc(o.phone):''} · ${UI.esc(UI.formatDate(o.date))}</p>
+          ${o.slot?`<p class="offer__meta"><strong>Scheduled:</strong> ${UI.esc(new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',hour12:false}).format(new Date(o.slot)))} · ${UI.esc(n.deliveryAddress||'')}</p>`:''}
         </div>
         ${actions && `<div class="offer__actions">${actions}</div>`}
       </div>`;
