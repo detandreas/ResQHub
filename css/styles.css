@@ -1156,6 +1156,11 @@ textarea.input {
 }
 
 .login__submit { width: 100%; justify-content: space-between; }
+.panel__title--lg + .form { margin-top: 24px; }
+.guest-entry { margin-top: 12px; }
+.guest-entry .btn { width: 100%; }
+.account-prompt { margin-top: 24px; color: var(--muted); font-size: 14px; text-align: center; }
+.account-prompt a { color: var(--ink); font-weight: 600; }
 
 /* ---------- 21. Footer ---------- */
 .footer {
