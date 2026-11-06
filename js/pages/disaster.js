@@ -1,7 +1,7 @@
 /* disaster.html?id=N: event banner and its needs, grouped by organization. */
 (function () {
   'use strict';
-  if (!UI.initPage()) return;
+  if (!UI.initPage({ allowGuest: true })) return;
 
   const e = Store.event(UI.param('id'));
   if (!e) {
