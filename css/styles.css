@@ -933,6 +933,7 @@ body[data-role="hub"] .citizen-only { display: none; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .toolbar .field { flex: 0 1 220px; }
 .toolbar .field--grow { flex: 1 1 320px; }
+.toolbar #reset-filters { min-height: 46px; }
 
 .field__label { font-size: 13px; font-weight: 600; }
 .field__hint { color: var(--muted); font-size: 12.5px; }
