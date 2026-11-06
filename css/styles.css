@@ -98,6 +98,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* Role-based visibility (body[data-role] is set by js/ui.js) */
 body:not([data-role="hub"]) .hub-only { display: none; }
 body[data-role="hub"] .citizen-only { display: none; }
+body[data-role="guest"] .account__who { display: grid; }
 
 /* ---------- 3. Layout ---------- */
 .wrap {
