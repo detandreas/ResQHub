@@ -1516,7 +1516,7 @@ textarea.input {
   border-radius: var(--radius-lg);
 }
 
-.login__submit { width: 100%; justify-content: space-between; }
+.actions .btn.login__submit { width: 100%; justify-content: center; }
 .panel__title--lg + .form { margin-top: 24px; }
 .guest-entry { margin-top: 12px; }
 .guest-entry .btn { width: 100%; }
