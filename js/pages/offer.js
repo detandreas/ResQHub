@@ -17,6 +17,12 @@
   const submit = UI.$('submit-offer');
   const slots = Store.upcomingSlots(n);
 
+  // The contributor is signed in, so start with their own details. All three fields stay editable.
+  const user = Auth.current();
+  UI.$('name').value = user.name || '';
+  UI.$('email').value = user.email || '';
+  UI.$('phone').value = user.phone || '';
+
   function renderSummary() {
     const left = Store.remaining(n);
     UI.$('need-requested').textContent = `${n.quantity} ${n.unit}`;

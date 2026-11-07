@@ -13,7 +13,7 @@ const Auth = (function () {
   const MIN_PASSWORD = 6;
 
   const BUILT_IN = [
-    { username: 'contributor', password: '123', role: 'citizen' },
+    { username: 'contributor', password: '123', role: 'citizen', name: 'Alex Morgan', email: 'alex.morgan@example.com', phone: '6912345678' },
     { username: 'organization', password: '123', role: 'hub', hubId: 1 }
   ];
 
@@ -37,7 +37,7 @@ const Auth = (function () {
     return accounts().find((a) => a.username === key);
   };
 
-  const sessionOf = (a) => ({ username: a.username, role: a.role, hubId: a.hubId, name: a.name });
+  const sessionOf = (a) => ({ username: a.username, role: a.role, hubId: a.hubId, name: a.name, email: a.email, phone: a.phone });
 
   /** Remember who is signed in. Returns false when the browser blocks storage. */
   function remember(user) {
@@ -103,7 +103,7 @@ const Auth = (function () {
     return remember(user) ? { ok: true, user } : fail(BLOCKED);
   }
 
-  /** The signed-in user ({ username, role, hubId, name }) or null. */
+  /** The signed-in user ({ username, role, hubId, name, email, phone }) or null. The demo organization account has no name, email or phone. */
   function current() {
     try {
       const stored = JSON.parse(localStorage.getItem(KEY));
