@@ -765,6 +765,144 @@ body[data-role="hub"] .citizen-only { display: none; }
   margin-top: 24px;
 }
 
+/* Pledge confirmation (offer.html): replaces the form once a pledge is submitted.
+   The disaster's photo heads the card; the check mark pops in and draws itself. */
+.pledge-done { max-width: 720px; margin: 40px auto 0; }
+
+.pledge-done__card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+  animation: pledge-rise .5s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.pledge-done__card:focus { outline: none; }
+
+.pledge-done__head { padding: 44px 36px 36px; text-align: center; }
+
+.pledge-done__head::after {
+  background: linear-gradient(180deg,
+      color-mix(in srgb, var(--ink) 62%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 92%, transparent) 100%);
+}
+
+.pledge-done__check { width: 76px; height: 76px; margin: 0 auto 20px; overflow: visible; }
+
+.pledge-done__check circle {
+  fill: var(--soft);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pledge-pop .55s .15s cubic-bezier(.3, 1.5, .5, 1) both;
+}
+
+.pledge-done__check path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 40;
+  animation: pledge-draw .4s .6s ease-out both;
+}
+
+.pledge-done__eyebrow {
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.pledge-done__title {
+  margin-top: 8px;
+  font-size: clamp(30px, 4.4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.pledge-done__lead {
+  max-width: 500px;
+  margin: 14px auto 0;
+  color: var(--on-photo-muted);
+  font-size: 16px;
+}
+
+.pledge-done__body { padding: 28px 36px 34px; }
+
+.receipt { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+
+.receipt__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 13px 18px;
+}
+
+.receipt__row + .receipt__row { border-top: 1px solid var(--line); }
+.receipt dt { flex: none; color: var(--muted); font-size: 13.5px; }
+.receipt dd { margin: 0; font-size: 15px; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+
+.receipt__row--main { align-items: center; background: var(--soft-tint); }
+.receipt__row--main dt { color: var(--ink-on-soft); font-weight: 600; }
+.receipt__row--main dd { font-size: 26px; font-weight: 800; letter-spacing: -.035em; }
+
+.pledge-done__next { margin-top: 30px; font-size: 17px; font-weight: 800; letter-spacing: -.025em; }
+
+/* Three steps on a vertical line: done (green), your turn (orange), then the organization's */
+.steps { margin: 16px 0 0; padding: 0; list-style: none; counter-reset: step; }
+
+.steps__item {
+  position: relative;
+  padding: 0 0 20px 46px;
+  color: var(--muted);
+  font-size: 14.5px;
+  counter-increment: step;
+}
+
+.steps__item:last-child { padding-bottom: 0; }
+.steps__item strong { display: block; color: var(--ink); font-size: 15px; font-weight: 700; }
+
+.steps__item::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--soft-tint);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.steps__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 38px;
+  bottom: 6px;
+  left: 15.5px;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.steps__item.is-done::before { content: "✓"; background: var(--ink); box-shadow: none; color: var(--base); }
+.steps__item.is-next::before { background: var(--loud); box-shadow: none; color: var(--on-loud); }
+
+.pledge-done__actions { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+
+@keyframes pledge-rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes pledge-pop { from { opacity: 0; transform: scale(.4); } }
+@keyframes pledge-draw { from { stroke-dashoffset: 40; } }
+
 .facts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1485,6 +1623,11 @@ textarea.input {
   .form-done { padding: 24px 16px; }
   .form-done__box { padding: 24px 20px 22px; }
   .form-done__actions .btn { flex: 1 1 100%; }
+  .pledge-done { margin-top: 20px; }
+  .pledge-done__head { padding: 32px 20px 28px; }
+  .pledge-done__check { width: 64px; height: 64px; }
+  .pledge-done__body { padding: 22px 18px 26px; }
+  .receipt__row { padding: 12px 14px; }
   .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
@@ -1498,6 +1641,7 @@ textarea.input {
   *::before,
   *::after {
     transition: none !important;
+    animation: none !important;
     scroll-behavior: auto !important;
   }
 }

@@ -65,8 +65,43 @@
       return;
     }
 
-    UI.flash(`Thank you! Your offer of ${result.offer.quantity} ${n.unit} is pending confirmation by ${h.name}. ` +
-      `Delivery: ${UI.formatSlot(result.offer.slot)}, ${Store.deliveryAddress(n)}.`);
-    window.location.href = 'index.html';
+    showSuccess(result.offer);
   });
+
+  /** Replace the form with the confirmation card: what was pledged, where and when, and what comes next. */
+  function showSuccess(offer) {
+    const amount = `${offer.quantity} ${n.unit}`;
+    const when = UI.formatSlot(offer.slot);
+    const where = Store.deliveryAddress(n);
+    const firstName = offer.name.split(/\s+/)[0];
+
+    document.title = `Pledge received | ResQHub`;
+    UI.$('success-photo').classList.add(`photo--${UI.eventKind(e)}`);
+    UI.$('offer-success-title').textContent = `Thank you, ${firstName}!`;
+    UI.$('offer-success-message').textContent =
+      `Your pledge of ${amount} for “${n.title}” has been sent to ${h.name}.`;
+
+    UI.$('success-quantity').textContent = amount;
+    UI.$('success-need').textContent = n.title;
+    UI.$('success-hub').textContent = h.name;
+    UI.$('success-slot').textContent = when;
+    UI.$('success-address').textContent = where;
+    UI.$('success-ref').textContent = `#${offer.id}`;
+
+    UI.$('success-contact').textContent = `We saved it under ${offer.email}.`;
+    UI.$('success-bring').textContent = `${when}, at ${where}.`;
+    UI.$('success-confirm').textContent =
+      `${h.name} marks it as received once it arrives and updates the need.`;
+
+    UI.$('success-actions').innerHTML =
+      '<a class="btn btn--loud" href="index.html#needs">Explore more needs</a>' +
+      `<a class="btn btn--ghost" href="disaster.html?id=${e.id}">Back to disaster</a>`;
+
+    UI.clearNotice('form-message');
+    UI.$('offer-intro').hidden = true;
+    UI.$('offer-view').hidden = true;
+    UI.$('offer-success').hidden = false;
+    window.scrollTo({ top: 0 });
+    UI.$('offer-success-box').focus({ preventScroll: true });
+  }
 })();
