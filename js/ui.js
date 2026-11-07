@@ -24,6 +24,15 @@ const UI = (function () {
   /** Read a query-string parameter, e.g. param('id') on disaster.html?id=2. */
   const param = (name) => new URLSearchParams(window.location.search).get(name);
 
+  /**
+   * The page to return to after signing in or registering (?next=offer.html?need=3).
+   * Only one of this site's own pages is accepted; anything else gives null.
+   */
+  function nextPage() {
+    const next = param('next') || '';
+    return /^[a-z-]+\.html(\?[\w=&.-]*)?$/.test(next) ? next : null;
+  }
+
   // ---------- Session ----------
   /** 'citizen' (Contributor) | 'hub' (Organization Representative) for the signed-in user. */
   const role = () => Auth.current()?.role;
@@ -52,9 +61,19 @@ const UI = (function () {
       el.textContent = hub ? hub.name : user.name || user.username;
     });
     document.querySelectorAll('[data-account-role]').forEach((el) => {
-      el.textContent = Auth.roleLabel(user.role);
+      el.textContent = user.guest ? 'Browsing only' : Auth.roleLabel(user.role);
     });
     document.querySelectorAll('[data-logout]').forEach((button) => {
+      if (user.guest) {
+        // A guest has nothing to log out of: the button becomes "Sign in", next to "Create account".
+        button.textContent = 'Sign in';
+        button.insertAdjacentHTML('afterend', '<a class="btn btn--loud btn--sm" href="register.html">Create account</a>');
+        button.addEventListener('click', () => {
+          Auth.logout();
+          window.location.href = 'login.html';
+        });
+        return;
+      }
       button.addEventListener('click', () => {
         Auth.logout();
         flash('You have been logged out.');
@@ -77,11 +96,12 @@ const UI = (function () {
   }
 
   // ---------- Messages ----------
-  /** Show a message now. kind: 'ok' | 'error'. target: id of the container. */
+  /** Show a message now. kind: 'ok' | 'error' | 'info'. target: id of the container. */
   function notice(message, kind = 'ok', target = 'flash') {
     const box = $(target);
     if (!box) return;
-    box.innerHTML = `<p class="notice notice--${kind === 'error' ? 'error' : 'ok'}">${esc(message)}</p>`;
+    const style = kind === 'error' || kind === 'info' ? kind : 'ok';
+    box.innerHTML = `<p class="notice notice--${style}">${esc(message)}</p>`;
     box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
@@ -251,6 +271,7 @@ const UI = (function () {
     $,
     esc,
     param,
+    nextPage,
     initPage,
     refreshPendingBadge,
     notice,

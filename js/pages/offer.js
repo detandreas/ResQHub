@@ -12,6 +12,13 @@
     return;
   }
 
+  // Guests can browse but not pledge: send them to register, and bring them back to this need afterwards.
+  if (Auth.current().guest) {
+    UI.flash(`Create an account to offer help for “${n.title}”. It only takes a minute, and you'll come straight back to it.`, 'info');
+    window.location.replace(`register.html?next=${encodeURIComponent(`offer.html?need=${n.id}`)}`);
+    return;
+  }
+
   const form = UI.$('offer-form');
   const qty = UI.$('qty');
   const submit = UI.$('submit-offer');

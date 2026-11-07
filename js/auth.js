@@ -1,6 +1,8 @@
 /* ResQHub demo sign-in: two built-in accounts plus the accounts people register, no real authentication.
  *
  * Registered accounts and the signed-in user are kept in localStorage until "Log out".
+ * "Continue as guest" signs in a guest: a Contributor who can browse every page but has no account,
+ * so it cannot offer help (offer.html sends guests to the register page).
  * Passwords are stored as plain text because this is a demo; never reuse a real one.
  * Loaded before js/ui.js on every page. register() also needs js/store.js (register.html loads it).
  */
@@ -50,6 +52,14 @@ const Auth = (function () {
   }
 
   const BLOCKED = 'Your browser blocks storage, so you cannot stay signed in.';
+
+  // A guest has the Contributor role but no account behind it, so nothing here is checked against accounts().
+  const GUEST = { username: 'guest', role: 'citizen', name: 'Guest', guest: true };
+
+  /** Browse without an account. Returns { ok, user } or { ok: false, error }. */
+  function continueAsGuest() {
+    return remember(GUEST) ? { ok: true, user: { ...GUEST } } : { ok: false, error: BLOCKED };
+  }
 
   /** Check the credentials and remember the user. Returns { ok, user } or { ok: false, error }. */
   function login(username, password) {
@@ -103,10 +113,15 @@ const Auth = (function () {
     return remember(user) ? { ok: true, user } : fail(BLOCKED);
   }
 
-  /** The signed-in user ({ username, role, hubId, name, email, phone }) or null. The demo organization account has no name, email or phone. */
+  /**
+   * The signed-in user ({ username, role, hubId, name, email, phone }) or null.
+   * A guest comes back as { username: 'guest', role: 'citizen', name: 'Guest', guest: true }.
+   * The demo organization account has no name, email or phone.
+   */
   function current() {
     try {
       const stored = JSON.parse(localStorage.getItem(KEY));
+      if (stored && stored.guest === true) return { ...GUEST };
       const found = stored && account(stored.username);
       return found && found.role === stored.role ? sessionOf(found) : null;
     } catch (e) {
@@ -127,5 +142,5 @@ const Auth = (function () {
 
   const roleLabel = (role) => ROLE_LABELS[role] || '';
 
-  return { login, register, current, logout, landing, roleLabel };
+  return { login, register, continueAsGuest, current, logout, landing, roleLabel };
 })();

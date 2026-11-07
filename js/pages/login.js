@@ -1,9 +1,10 @@
-/* login.html: sign in with one of the demo accounts, then go to that role's first page. */
+/* login.html: sign in with one of the demo accounts, then go to that role's first page,
+ * or continue as a guest (browse only). A guest who opened this page can still sign in. */
 (function () {
   'use strict';
 
   const user = Auth.current();
-  if (user) {
+  if (user && !user.guest) {
     window.location.replace(Auth.landing(user.role));
     return;
   }
@@ -20,6 +21,16 @@
   };
 
   UI.showStoredFlash();
+
+  UI.$('guest-entry').addEventListener('click', (event) => {
+    event.preventDefault();
+    const result = Auth.continueAsGuest();
+    if (!result.ok) {
+      UI.notice(result.error, 'error', 'form-message');
+      return;
+    }
+    window.location.href = Auth.landing(result.user.role);
+  });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -39,7 +50,8 @@
       return;
     }
 
-    window.location.href = Auth.landing(result.user.role);
+    // Someone sent here from "Offer help" goes back to that need, unless the account is an organization's.
+    window.location.href = (result.user.role === 'citizen' && UI.nextPage()) || Auth.landing(result.user.role);
   });
 
   [username, password].forEach((input) => input.addEventListener('input', () => {
