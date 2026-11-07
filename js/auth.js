@@ -15,8 +15,8 @@ const Auth = (function () {
   const MIN_PASSWORD = 6;
 
   const BUILT_IN = [
-    { username: 'contributor', password: '123', role: 'citizen', name: 'Alex Morgan', email: 'alex.morgan@example.com', phone: '6912345678' },
-    { username: 'organization', password: '123', role: 'hub', hubId: 1 }
+    { username: 'contributor@demo.gr', password: '123', role: 'citizen', name: 'Alex Morgan', email: 'contributor@demo.gr', phone: '6912345678' },
+    { username: 'organization@demo.gr', password: '123', role: 'hub', hubId: 1 }
   ];
 
   // Internal role keys stay 'citizen' / 'hub'; these are the names people see.
@@ -33,7 +33,7 @@ const Auth = (function () {
 
   const accounts = () => [...BUILT_IN, ...readRegistered()];
 
-  /** An account by username or email, ignoring case. */
+  /** An account by its email (the username), ignoring case. */
   const account = (who) => {
     const key = String(who ?? '').trim().toLowerCase();
     return accounts().find((a) => a.username === key);
@@ -62,10 +62,10 @@ const Auth = (function () {
   }
 
   /** Check the credentials and remember the user. Returns { ok, user } or { ok: false, error }. */
-  function login(username, password) {
-    const found = account(username);
+  function login(email, password) {
+    const found = account(email);
     if (!found || found.password !== String(password ?? '')) {
-      return { ok: false, error: 'Wrong username or password.' };
+      return { ok: false, error: 'Wrong email or password.' };
     }
 
     const user = sessionOf(found);
