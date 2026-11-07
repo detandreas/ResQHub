@@ -37,13 +37,13 @@
   --shadow-lift: 0 22px 40px -22px color-mix(in srgb, var(--ink) 40%, transparent);
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
-  /* Photos: the hero is blended into the sage hue (see .photo--hero); event photos are used as they are */
-  --img-hero: url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2000&q=80");
-  --img-flood: url("https://images.unsplash.com/photo-1760500959972-27f751e094b1?auto=format&fit=crop&w=1600&q=85");
-  --img-fire: url("https://images.unsplash.com/photo-1759699631373-b8103eddef4b?auto=format&fit=crop&w=1600&q=85");
-  --img-industrial: url("https://images.unsplash.com/photo-1708300251110-0f0affccb436?auto=format&fit=crop&w=1600&q=85");
-  --img-quake: url("https://images.unsplash.com/photo-1677233860259-ce1a8e0f8498?auto=format&fit=crop&w=1600&q=85");
-  --img-landslide: url("https://images.unsplash.com/photo-1687555821474-c0b2ed52a558?auto=format&fit=crop&w=1600&q=85");
+  /* Photos: local files in images/, all blended into the sage hue (see .photo) */
+  --img-hero: url("../images/hero.webp");
+  --img-flood: url("../images/flood.webp");
+  --img-fire: url("../images/wildfire.webp");
+  --img-industrial: url("../images/industrial.webp");
+  --img-quake: url("../images/earthquake.webp");
+  --img-landslide: url("../images/landslide.webp");
 }
 
 /* ---------- 2. Base ---------- */
@@ -500,7 +500,7 @@ body[data-role="hub"] .citizen-only { display: none; }
       color-mix(in srgb, var(--ink) 28%, transparent) 100%);
 }
 
-/* Event photos are pre-graded; only the hero is luminosity-blended into the sage hue */
+/* Photos sit on a sage ground. The hero is fully blended into it (luminosity); see .photo:not(.photo--hero) for the others */
 .photo {
   position: absolute;
   inset: 0;
@@ -511,14 +511,26 @@ body[data-role="hub"] .citizen-only { display: none; }
   transition: transform .6s ease;
 }
 
-/* Subtle sage-green tone for sharp disaster backgrounds. */
+/* Event photos keep their light and shade on the sage ground (luminosity, like the hero), and the
+   ::before layer lays part of their real colour back on top (--photo-colour, 0 to 1), so the picture
+   stays sharp and natural while the palette stays sage, cream and orange. */
 .photo:not(.photo--hero) {
-  background-color: color-mix(in srgb, var(--soft) 58%, var(--ink));
-  background-blend-mode: soft-light;
+  background-color: var(--soft);
+  background-blend-mode: luminosity;
+}
+
+.photo:not(.photo--hero)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-position: inherit;
+  background-size: inherit;
+  opacity: var(--photo-colour, .3);
 }
 
 .photo--flood { background-image: var(--img-flood); }
-.photo--fire { background-image: var(--img-fire); }
+.photo--fire { background-image: var(--img-fire); --photo-colour: .5; } /* keep the flames orange */
 .photo--industrial { background-image: var(--img-industrial); }
 .photo--quake { background-image: var(--img-quake); }
 .photo--landslide { background-image: var(--img-landslide); }
@@ -1446,7 +1458,7 @@ textarea.input {
   margin-top: 24px;
 }
 
-/* ---------- 19. Empty states and shortcuts ---------- */
+/* ---------- 19. Empty states ---------- */
 .empty {
   grid-column: 1 / -1;
   display: grid;
@@ -1461,32 +1473,6 @@ textarea.input {
 
 .empty__title { color: var(--ink); font-size: 18px; font-weight: 700; }
 .empty .btn { margin-top: 6px; }
-
-.shortcuts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.shortcut {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 30px 32px;
-  border-radius: var(--radius);
-  background: var(--soft);
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -.03em;
-  text-decoration: none;
-  transition: background-color .15s;
-}
-
-.shortcut:hover { background: color-mix(in srgb, var(--soft) 70%, var(--base)); }
-.shortcut span { font-size: 28px; transition: transform .2s; }
-.shortcut:hover span { transform: translate(3px, -3px); }
 
 /* ---------- 20. Login ---------- */
 .login {
@@ -1601,7 +1587,6 @@ textarea.input {
 
   .cards,
   .formgrid,
-  .shortcuts { grid-template-columns: 1fr; }
   .slot-picker { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
   .cal__day { height: 36px; }
   .times__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1636,7 +1621,6 @@ textarea.input {
   .pledge-done__check { width: 64px; height: 64px; }
   .pledge-done__body { padding: 22px 18px 26px; }
   .receipt__row { padding: 12px 14px; }
-  .shortcut { padding: 24px; font-size: 21px; }
 
   .login { margin-top: 16px; gap: 14px; }
   .login__media { min-height: 240px; padding: 24px 22px; border-radius: 22px; }
