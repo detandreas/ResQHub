@@ -58,3 +58,9 @@
 
 ## Διορθώσεις
 `Disaster` event should be free text?
+
+## DB
+**Pledge**(~~citizen_id~~, `contributor_id`) -- Αντικατάσταση
+**Need**(`Delivery_times`) -- Προσθήκη
+
+Στον πίνακα Need τα columns disaster_id, organization_id είναι redundant καθώς υπάρχει το σύνθετο κλειδί (disaster_id, organization_id) που τα περιέχει ήδη.

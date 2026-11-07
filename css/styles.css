@@ -37,11 +37,13 @@
   --shadow-lift: 0 22px 40px -22px color-mix(in srgb, var(--ink) 40%, transparent);
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
-  /* Photos (blended into the sage hue, see .photo) */
+  /* Photos: the hero is blended into the sage hue (see .photo--hero); event photos are used as they are */
   --img-hero: url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2000&q=80");
-  --img-flood: url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=75");
-  --img-fire: url("https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=900&q=75");
-  --img-quake: url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=75");
+  --img-flood: url("../images/flood.webp");
+  --img-fire: url("../images/wildfire.webp");
+  --img-industrial: url("../images/industrial.webp");
+  --img-quake: url("../images/earthquake.webp");
+  --img-landslide: url("../images/landslide.webp");
 }
 
 /* ---------- 2. Base ---------- */
@@ -498,7 +500,7 @@ body[data-role="hub"] .citizen-only { display: none; }
       color-mix(in srgb, var(--ink) 28%, transparent) 100%);
 }
 
-/* Luminosity blend: the photo keeps its light and shade but takes the sage hue */
+/* Event photos are pre-graded; only the hero is luminosity-blended into the sage hue */
 .photo {
   position: absolute;
   inset: 0;
@@ -506,16 +508,15 @@ body[data-role="hub"] .citizen-only { display: none; }
   background-color: var(--soft);
   background-position: center;
   background-size: cover;
-  background-blend-mode: luminosity;
   transition: transform .6s ease;
 }
 
 .photo--flood { background-image: var(--img-flood); }
-.photo--fire,
-.photo--industrial { background-image: var(--img-fire); }
-.photo--quake,
-.photo--landslide { background-image: var(--img-quake); }
-.photo--hero { background-image: var(--img-hero); }
+.photo--fire { background-image: var(--img-fire); }
+.photo--industrial { background-image: var(--img-industrial); }
+.photo--quake { background-image: var(--img-quake); }
+.photo--landslide { background-image: var(--img-landslide); }
+.photo--hero { background-image: var(--img-hero); background-blend-mode: luminosity; }
 
 /* ---------- 10. Cards (needs and disaster events) ---------- */
 .cards {
