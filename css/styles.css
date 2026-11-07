@@ -500,7 +500,7 @@ body[data-role="hub"] .citizen-only { display: none; }
       color-mix(in srgb, var(--ink) 28%, transparent) 100%);
 }
 
-/* Event photos are pre-graded; only the hero is luminosity-blended into the sage hue */
+/* Preserve photo detail while gently blending disaster imagery with the green palette. */
 .photo {
   position: absolute;
   inset: 0;
@@ -509,6 +509,12 @@ body[data-role="hub"] .citizen-only { display: none; }
   background-position: center;
   background-size: cover;
   transition: transform .6s ease;
+}
+
+/* A restrained sage-green grade for every disaster photo; hero keeps its own treatment. */
+.photo:not(.photo--hero) {
+  background-color: color-mix(in srgb, var(--soft) 58%, var(--ink));
+  background-blend-mode: soft-light;
 }
 
 .photo--flood { background-image: var(--img-flood); }
