@@ -8,7 +8,7 @@
 'use strict';
 
 const Store = (function () {
-  const KEY = 'resqhub_aid_needs_v3'; // bump when SEED changes so browsers load the new demo data
+  const KEY = 'resqhub_aid_needs_v4'; // bump when SEED changes so browsers load the new demo data
   const DEMO_HUB_ID = 1; // the demo Organization Representative works for "Community Relief Network"
   const CATEGORIES = ['Goods', 'Volunteers'];
   const MAX_QUANTITY = 100000;
@@ -47,21 +47,23 @@ const Store = (function () {
       { id: 13, eventId: 6, hubId: 2, title: 'Cleaning kits', unit: 'kits', quantity: 100, notes: 'Bleach, mops, buckets and gloves', category: 'Goods' },
       { id: 14, eventId: 7, hubId: 2, title: 'Family tents', unit: 'items', quantity: 25, notes: 'Waterproof tents for four or more people', category: 'Goods' }
     ],
+    // Same shape as offers made through addOffer: contact details plus the chosen delivery time (slot).
+    // Delivered offers have a slot in the past; pending ones are still due (except #13, delivered but not yet confirmed).
     offers: [
-      { id: 1, needId: 1, name: 'Alex Morgan', email: 'alex@example.com', quantity: 20, status: 'received', date: '2026-11-02' },
-      { id: 2, needId: 2, name: 'Sam Taylor', email: 'sam@example.com', quantity: 10, status: 'pending', date: '2026-11-03' },
-      { id: 3, needId: 7, name: 'Maria Papadopoulou', email: 'maria@example.com', quantity: 18, status: 'received', date: '2026-11-03' },
-      { id: 4, needId: 7, name: 'Nikos Georgiou', email: 'nikos@example.com', quantity: 12, status: 'received', date: '2026-11-04' },
-      { id: 5, needId: 8, name: 'Eleni Dimitriou', email: 'eleni@example.com', quantity: 8, status: 'received', date: '2026-11-04' },
-      { id: 6, needId: 8, name: 'Jordan Lee', email: 'jordan@example.com', quantity: 4, status: 'pending', date: '2026-11-05' },
-      { id: 7, needId: 9, name: 'Kostas Ioannou', email: 'kostas@example.com', quantity: 40, status: 'pending', date: '2026-11-01' },
-      { id: 8, needId: 9, name: 'Sofia Nikolaou', email: 'sofia@example.com', quantity: 20, status: 'pending', date: '2026-11-02' },
-      { id: 9, needId: 10, name: 'Alex Morgan', email: 'alex@example.com', quantity: 10, status: 'received', date: '2026-10-02' },
-      { id: 10, needId: 4, name: 'Dimitra Karra', email: 'dimitra@example.com', quantity: 15, status: 'declined', date: '2026-10-31' },
-      { id: 11, needId: 4, name: 'Sam Taylor', email: 'sam@example.com', quantity: 20, status: 'pending', date: '2026-11-01' },
-      { id: 12, needId: 11, name: 'Jordan Lee', email: 'jordan@example.com', quantity: 15, status: 'pending', date: '2026-11-05' },
-      { id: 13, needId: 12, name: 'Giorgos Vlachos', email: 'giorgos@example.com', quantity: 6, status: 'pending', date: '2026-10-17' },
-      { id: 14, needId: 13, name: 'Anna Petrou', email: 'anna@example.com', quantity: 35, status: 'received', date: '2026-10-05' }
+      { id: 1, needId: 1, name: 'Alex Morgan', email: 'alex@example.com', phone: '6912345678', quantity: 20, status: 'received', date: '2026-11-02', slot: '2026-11-03T10:00' },
+      { id: 2, needId: 2, name: 'Sam Taylor', email: 'sam@example.com', phone: '6944123456', quantity: 10, status: 'pending', date: '2026-11-03', slot: '2026-11-08T10:00' },
+      { id: 3, needId: 7, name: 'Maria Papadopoulou', email: 'maria@example.com', phone: '6977234567', quantity: 18, status: 'received', date: '2026-11-03', slot: '2026-11-04T10:00' },
+      { id: 4, needId: 7, name: 'Nikos Georgiou', email: 'nikos@example.com', phone: '6988345678', quantity: 12, status: 'received', date: '2026-11-04', slot: '2026-11-05T16:00' },
+      { id: 5, needId: 8, name: 'Eleni Dimitriou', email: 'eleni@example.com', phone: '6955456789', quantity: 8, status: 'received', date: '2026-11-04', slot: '2026-11-05T10:00' },
+      { id: 6, needId: 8, name: 'Jordan Lee', email: 'jordan@example.com', phone: '6933567890', quantity: 4, status: 'pending', date: '2026-11-05', slot: '2026-11-09T10:00' },
+      { id: 7, needId: 9, name: 'Kostas Ioannou', email: 'kostas@example.com', phone: '6970678901', quantity: 40, status: 'pending', date: '2026-11-01', slot: '2026-11-08T16:00' },
+      { id: 8, needId: 9, name: 'Sofia Nikolaou', email: 'sofia@example.com', phone: '6946789012', quantity: 20, status: 'pending', date: '2026-11-02', slot: '2026-11-09T16:00' },
+      { id: 9, needId: 10, name: 'Alex Morgan', email: 'alex@example.com', phone: '6912345678', quantity: 10, status: 'received', date: '2026-10-02', slot: '2026-10-03T16:00' },
+      { id: 10, needId: 4, name: 'Dimitra Karra', email: 'dimitra@example.com', phone: '6981890123', quantity: 15, status: 'declined', date: '2026-10-31', slot: '2026-11-02T10:00' },
+      { id: 11, needId: 4, name: 'Sam Taylor', email: 'sam@example.com', phone: '6944123456', quantity: 20, status: 'pending', date: '2026-11-01', slot: '2026-11-10T10:00' },
+      { id: 12, needId: 11, name: 'Jordan Lee', email: 'jordan@example.com', phone: '6933567890', quantity: 15, status: 'pending', date: '2026-11-05', slot: '2026-11-10T16:00' },
+      { id: 13, needId: 12, name: 'Giorgos Vlachos', email: 'giorgos@example.com', phone: '6974901234', quantity: 6, status: 'pending', date: '2026-10-17', slot: '2026-10-19T16:00' },
+      { id: 14, needId: 13, name: 'Anna Petrou', email: 'anna@example.com', phone: '6932012345', quantity: 35, status: 'received', date: '2026-10-05', slot: '2026-10-06T10:00' }
     ],
     nextId: 100
   };
